@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE abatorConfiguration PUBLIC "-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN" "http://ibatis.apache.org/dtd/abator-config_1_0.dtd" >
+<abatorConfiguration >
+
+  <abatorContext>
+
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/cgzb" userId="root" password="123456" >
+      <classPathEntry location="D:\testde\mysql-connector-java-5.1.6-bin.jar" />
+    </jdbcConnection>
+      
+    <javaModelGenerator targetPackage="cn.krt.zbcg.commons.bo.system" targetProject="krt" />
+    
+    <sqlMapGenerator targetPackage="cn.krt.zbcg.commons.sqlmap.system" targetProject="krt" />
+     <daoGenerator targetPackage="cn.krt.zbcg.system.dao" targetProject="krt" type="spring">
+    </daoGenerator>
+    <table schema="cgzb" tableName="shqdhead" ></table>
+  </abatorContext>
+</abatorConfiguration>

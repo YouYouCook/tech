@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<settings 
+		cacheModelsEnabled="false" 
+		enhancementEnabled="false"
+		lazyLoadingEnabled="true" 
+		errorTracingEnabled="true"
+		useStatementNamespaces="true" 
+		maxRequests="32" 
+		maxSessions="10"
+		maxTransactions="5" />
+		
+	<!-- ************ Commons Base sqlMap 文件   **************** -->
+	<sqlMap resource="org/ssi/sqlmap/Base.xml"/>
+	<sqlMap resource="cn/krt/zbcg/commons/sqlmap/system/customer.xml"/>
+	<sqlMap resource="cn/krt/zbcg/commons/sqlmap/system/medicine_cg.xml"/>
+	<sqlMap resource="cn/krt/zbcg/commons/sqlmap/system/medicine_jb.xml"/>
+	<sqlMap resource="cn/krt/zbcg/commons/sqlmap/system/medicine_zb.xml"/>
+	<sqlMap resource="cn/krt/zbcg/commons/sqlmap/system/medicine.xml"/>
+	<sqlMap resource="cn/krt/zbcg/commons/sqlmap/system/users.xml"/>
+	<sqlMap resource="cn/krt/zbcg/commons/sqlmap/system/customer_vip.xml"/>
+	<sqlMap resource="cn/krt/zbcg/commons/sqlmap/system/vip_zb.xml"/>
+	<sqlMap resource="cn/krt/zbcg/commons/sqlmap/system/notice.xml"/>
+	<sqlMap resource="cn/krt/zbcg/commons/sqlmap/system/storage.xml"/>
+	<sqlMap resource="cn/krt/zbcg/commons/sqlmap/system/shqd.xml"/>
+	<sqlMap resource="cn/krt/zbcg/commons/sqlmap/system/fapiaoinfo.xml"/>
+	<sqlMap resource="cn/krt/zbcg/commons/sqlmap/system/fukuandetail.xml"/>
+</sqlMapConfig>

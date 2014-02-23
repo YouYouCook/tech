@@ -1,0 +1,108 @@
+/*     */ package cn.krt.zbcg.system.dao.impl;
+/*     */ 
+/*     */ import cn.krt.zbcg.commons.bo.system.MedicineZbBO;
+/*     */ import cn.krt.zbcg.system.dao.IMedicineZbDAO;
+/*     */ import java.util.HashMap;
+/*     */ import java.util.List;
+/*     */ import java.util.Map;
+/*     */ import org.ssi.dao.impl.BaseDaoImpl;
+/*     */ 
+/*     */ public class MedicineZbDAOImpl extends BaseDaoImpl
+/*     */   implements IMedicineZbDAO
+/*     */ {
+/*     */   public void insert(MedicineZbBO record)
+/*     */     throws Exception
+/*     */   {
+/*  31 */     insert("medicine_zb.insert", record);
+/*     */   }
+/*     */ 
+/*     */   public int update(MedicineZbBO record)
+/*     */     throws Exception
+/*     */   {
+/*  41 */     int rows = update("medicine_zb.updateByPrimaryKey", record);
+/*  42 */     return rows;
+/*     */   }
+/*     */ 
+/*     */   public List selectAll(Object obj)
+/*     */   {
+/*  52 */     List list = queryList("medicine_zb.selectAll", obj);
+/*  53 */     return list;
+/*     */   }
+/*     */ 
+/*     */   public Object selectAllOfCount(Object obj)
+/*     */   {
+/*  63 */     Object o = queryData("medicine_zb.selectAllOfCount", obj);
+/*  64 */     return o;
+/*     */   }
+/*     */ 
+/*     */   public Object queryData(Object obj)
+/*     */   {
+/*  74 */     Object record = queryData("medicine_zb.selectByPrimaryKey", obj);
+/*  75 */     return record;
+/*     */   }
+/*     */ 
+/*     */   public int delete(MedicineZbBO key)
+/*     */     throws Exception
+/*     */   {
+/*  85 */     int rows = delete("medicine_zb.deleteByPrimaryKey", key);
+/*  86 */     return rows;
+/*     */   }
+/*     */ 
+/*     */   public void insertPrepare(Map map) throws Exception {
+/*  90 */     insert("medicine_zb.insertPrepare", map);
+/*     */   }
+/*     */   public List checkZbMedicine(Map map) {
+/*  93 */     List list = queryList("medicine_zb.checkZbMedicine", map);
+/*  94 */     return list;
+/*     */   }
+/*     */   public List resultForCg(Map map) {
+/*  97 */     List list = queryList("medicine_zb.resultForCg", map);
+/*  98 */     return list;
+/*     */   }
+/*     */   public List resultForSuppliers(Map map) {
+/* 101 */     List list = queryList("medicine_zb.resultForSuppliers", map);
+/* 102 */     return list;
+/*     */   }
+/*     */   public void updateZbState(MedicineZbBO key) {
+/*     */     try {
+/* 106 */       update("medicine_zb.updateZbState", key);
+/*     */     }
+/*     */     catch (Exception e) {
+/* 109 */       e.printStackTrace();
+/*     */     }
+/*     */   }
+/*     */ 
+/*     */   public void updateZbStateFq(String medicineId, String beginDate) {
+/* 114 */     Map map = new HashMap();
+/* 115 */     map.put("medicineId", medicineId);
+/* 116 */     map.put("beginDate", beginDate);
+/*     */     try {
+/* 118 */       update("medicine_zb.updateZbStateFq", map);
+/*     */     }
+/*     */     catch (Exception e) {
+/* 121 */       e.printStackTrace();
+/*     */     }
+/*     */   }
+/*     */ 
+/*     */   public List tqjb(Map map) {
+/* 126 */     List list = queryList("medicine_zb.tqjb", map);
+/* 127 */     return list;
+/*     */   }
+/*     */ 
+/*     */   public void updateZbAuthState(String medicineId, String beginDate) {
+/* 131 */     Map map = new HashMap();
+/* 132 */     map.put("medicineId", medicineId);
+/* 133 */     map.put("beginDate", beginDate);
+/*     */     try {
+/* 135 */       update("medicine_zb.updateZbAuthState", map);
+/*     */     }
+/*     */     catch (Exception e) {
+/* 138 */       e.printStackTrace();
+/*     */     }
+/*     */   }
+/*     */ }
+
+/* Location:           D:\李慧医药项目\tcmages\krt\WEB-INF\classes\
+ * Qualified Name:     cn.krt.zbcg.system.dao.impl.MedicineZbDAOImpl
+ * JD-Core Version:    0.6.2
+ */

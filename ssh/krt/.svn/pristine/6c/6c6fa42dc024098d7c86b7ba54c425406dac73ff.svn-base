@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="H_B_INTEGRITY_INFO" >
+  <resultMap id="TegrityInfoResult" class="cn.id5.idreal_hr.commons.bo.verification.IntegrityInfoBO" >
+
+    <result column="II_ID" property="iiId" jdbcType="DECIMAL" />
+    <result column="II_FILL_DATE" property="iiFillDate" jdbcType="VARCHAR" />
+    <result column="II_APPLY_POSITION" property="iiApplyPosition" jdbcType="VARCHAR" />
+    <result column="II_EXPECTED_SALARY" property="iiExpectedSalary" jdbcType="VARCHAR" />
+    <result column="II_NAME" property="iiName" jdbcType="VARCHAR" />
+    <result column="II_SEX" property="iiSex" jdbcType="CHAR" />
+    <result column="II_NATIONALITY" property="iiNationality" jdbcType="VARCHAR" />
+    <result column="II_ID_NO" property="iiIdNo" jdbcType="VARCHAR" />
+    <result column="II_BIRTHDAY" property="iiBirthday" jdbcType="VARCHAR" />
+    <result column="II_NATION" property="iiNation" jdbcType="VARCHAR" />
+    <result column="II_NATIVE_PLACE" property="iiNativePlace" jdbcType="VARCHAR" />
+    <result column="II_PHOTO" property="iiPhoto" jdbcType="VARCHAR" />
+    <result column="II_POLITICAL_STATUS" property="iiPoliticalStatus" jdbcType="VARCHAR" />
+    <result column="II_MARITAL_STATUS" property="iiMaritalStatus" jdbcType="CHAR" />
+    <result column="II_HAVE_CHILDREN_STATUS" property="iiHaveChildrenStatus" jdbcType="CHAR" />
+    <result column="II_PHONE" property="iiPhone" jdbcType="VARCHAR" />
+    <result column="II_EMAIL" property="iiEmail" jdbcType="VARCHAR" />
+    <result column="II_PRESENT_ADDRESS" property="iiPresentAddress" jdbcType="VARCHAR" />
+    <result column="II_POSTALCODE" property="iiPostalcode" jdbcType="VARCHAR" />
+    <result column="II_HOBBY" property="iiHobby" jdbcType="VARCHAR" />
+    <result column="II_DRIVE_QUALIFICATION_PLACE" property="iiDriveQualificationPlace" jdbcType="VARCHAR" />
+    <result column="II_DRIVE_QUALIFICATION_PERMIT" property="iiDriveQualificationPermit" jdbcType="VARCHAR" />
+    <result column="II_HAVE_CRIME" property="iiHaveCrime" jdbcType="CHAR" />
+    <result column="II_HAVE_DRUG" property="iiHaveDrug" jdbcType="CHAR" />
+    <result column="II_REMARK" property="iiRemark" jdbcType="VARCHAR" />
+    <result column="CUI_ID" property="cuiId" jdbcType="DECIMAL" />
+    <result column="II_CREATEUSER" property="iiCreateuser" jdbcType="VARCHAR" />
+    <result column="II_CREATETIME" property="iiCreatetime" jdbcType="VARCHAR" />
+    <result column="II_MODIFYUSER" property="iiModifyuser" jdbcType="VARCHAR" />
+    <result column="II_MODIFYTIME" property="iiModifytime" jdbcType="VARCHAR" />
+    <result column="II_EXT1" property="iiExt1" jdbcType="VARCHAR" />
+    <result column="II_EXT2" property="iiExt2" jdbcType="VARCHAR" />
+    <result column="II_EXT3" property="iiExt3" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="TegrityInfoResult" parameterClass="cn.id5.idreal_hr.commons.bo.verification.IntegrityInfoBO" >
+
+    select II_ID, II_FILL_DATE, II_APPLY_POSITION, II_EXPECTED_SALARY, II_NAME, II_SEX,
+      II_NATIONALITY, II_ID_NO, II_BIRTHDAY, II_NATION, II_NATIVE_PLACE, II_PHOTO,
+      II_POLITICAL_STATUS, II_MARITAL_STATUS, II_HAVE_CHILDREN_STATUS, II_PHONE, II_EMAIL,
+      II_PRESENT_ADDRESS, II_POSTALCODE, II_HOBBY, II_DRIVE_QUALIFICATION_PLACE,
+      II_DRIVE_QUALIFICATION_PERMIT, II_HAVE_CRIME, II_HAVE_DRUG, II_REMARK, CUI_ID, II_CREATEUSER,
+      II_CREATETIME, II_MODIFYUSER, II_MODIFYTIME, II_EXT1, II_EXT2, II_EXT3
+    from B_INTEGRITY_INFO
+    where II_ID = #iiId#
+  </select>
+  <select id="selectAll" resultMap="TegrityInfoResult" parameterClass="java.util.Map" >
+
+     SELECT * FROM ( SELECT ROWNUM AS NUMROW, c.* from ( 
+    select II_ID, II_FILL_DATE, II_APPLY_POSITION, II_EXPECTED_SALARY, II_NAME, II_SEX,
+      II_NATIONALITY, II_ID_NO, II_BIRTHDAY, II_NATION, II_NATIVE_PLACE, II_PHOTO,
+      II_POLITICAL_STATUS, II_MARITAL_STATUS, II_HAVE_CHILDREN_STATUS, II_PHONE, II_EMAIL,
+      II_PRESENT_ADDRESS, II_POSTALCODE, II_HOBBY, II_DRIVE_QUALIFICATION_PLACE,
+      II_DRIVE_QUALIFICATION_PERMIT, II_HAVE_CRIME, II_HAVE_DRUG, II_REMARK, CUI_ID, II_CREATEUSER,
+      II_CREATETIME, II_MODIFYUSER, II_MODIFYTIME, II_EXT1, II_EXT2, II_EXT3
+    from B_INTEGRITY_INFO
+     ) c) 
+     <![CDATA[ WHERE NUMROW >= $ibegin$  AND NUMROW < $iend$  ]]>
+  </select>
+  <select id="selectAllOfCount" resultClass="java.lang.String" parameterClass="java.util.Map" >
+
+     SELECT count(1) as ID from ( 
+    select II_ID, II_FILL_DATE, II_APPLY_POSITION, II_EXPECTED_SALARY, II_NAME, II_SEX,
+      II_NATIONALITY, II_ID_NO, II_BIRTHDAY, II_NATION, II_NATIVE_PLACE, II_PHOTO,
+      II_POLITICAL_STATUS, II_MARITAL_STATUS, II_HAVE_CHILDREN_STATUS, II_PHONE, II_EMAIL,
+      II_PRESENT_ADDRESS, II_POSTALCODE, II_HOBBY, II_DRIVE_QUALIFICATION_PLACE,
+      II_DRIVE_QUALIFICATION_PERMIT, II_HAVE_CRIME, II_HAVE_DRUG, II_REMARK, CUI_ID, II_CREATEUSER,
+      II_CREATETIME, II_MODIFYUSER, II_MODIFYTIME, II_EXT1, II_EXT2, II_EXT3
+    from B_INTEGRITY_INFO
+     ) 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="cn.id5.idreal_hr.commons.bo.verification.IntegrityInfoBO" >
+
+    delete from B_INTEGRITY_INFO
+    where II_ID = #iiId#
+  </delete>
+  <insert id="insert" parameterClass="cn.id5.idreal_hr.commons.bo.verification.IntegrityInfoBO" >
+
+    <selectKey resultClass="java.math.BigDecimal" keyProperty="iiId" >
+      SELECT SEQ_B_INTEGRITY_INFO.NEXTVAL AS ID FROM DUAL
+    </selectKey>
+    insert into B_INTEGRITY_INFO (II_ID, II_FILL_DATE, II_APPLY_POSITION, II_EXPECTED_SALARY,
+      II_NAME, II_SEX, II_NATIONALITY, II_ID_NO, II_BIRTHDAY, II_NATION, II_NATIVE_PLACE, II_PHOTO,
+      II_POLITICAL_STATUS, II_MARITAL_STATUS, II_HAVE_CHILDREN_STATUS, II_PHONE, II_EMAIL,
+      II_PRESENT_ADDRESS, II_POSTALCODE, II_HOBBY, II_DRIVE_QUALIFICATION_PLACE,
+      II_DRIVE_QUALIFICATION_PERMIT, II_HAVE_CRIME, II_HAVE_DRUG, II_REMARK, CUI_ID, II_CREATEUSER,
+      II_CREATETIME, II_MODIFYUSER, II_MODIFYTIME, II_EXT1, II_EXT2, II_EXT3)
+    values (#iiId#, #iiFillDate#, #iiApplyPosition#, #iiExpectedSalary#, #iiName#, #iiSex#,
+      #iiNationality#, #iiIdNo#, #iiBirthday#, #iiNation#, #iiNativePlace#, #iiPhoto#,
+      #iiPoliticalStatus#, #iiMaritalStatus#, #iiHaveChildrenStatus#, #iiPhone#, #iiEmail#,
+      #iiPresentAddress#, #iiPostalcode#, #iiHobby#, #iiDriveQualificationPlace#,
+      #iiDriveQualificationPermit#, #iiHaveCrime#, #iiHaveDrug#, #iiRemark#, #cuiId#,
+      #iiCreateuser#, #iiCreatetime#, #iiModifyuser#, #iiModifytime#, #iiExt1#, #iiExt2#, #iiExt3#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="cn.id5.idreal_hr.commons.bo.verification.IntegrityInfoBO" >
+    update B_INTEGRITY_INFO
+    set II_FILL_DATE = #iiFillDate#,
+      II_APPLY_POSITION = #iiApplyPosition#,
+      II_EXPECTED_SALARY = #iiExpectedSalary#,
+      II_NAME = #iiName#,
+      II_SEX = #iiSex#,
+      II_NATIONALITY = #iiNationality#,
+      II_ID_NO = #iiIdNo#,
+      II_BIRTHDAY = #iiBirthday#,
+      II_NATION = #iiNation#,
+      II_NATIVE_PLACE = #iiNativePlace#,
+      II_PHOTO = #iiPhoto#,
+      II_POLITICAL_STATUS = #iiPoliticalStatus#,
+      II_MARITAL_STATUS = #iiMaritalStatus#,
+      II_HAVE_CHILDREN_STATUS = #iiHaveChildrenStatus#,
+      II_PHONE = #iiPhone#,
+      II_EMAIL = #iiEmail#,
+      II_PRESENT_ADDRESS = #iiPresentAddress#,
+      II_POSTALCODE = #iiPostalcode#,
+      II_HOBBY = #iiHobby#,
+      II_DRIVE_QUALIFICATION_PLACE = #iiDriveQualificationPlace#,
+      II_DRIVE_QUALIFICATION_PERMIT = #iiDriveQualificationPermit#,
+      II_HAVE_CRIME = #iiHaveCrime#,
+      II_HAVE_DRUG = #iiHaveDrug#,
+      II_REMARK = #iiRemark#,
+      CUI_ID = #cuiId#,
+      II_CREATEUSER = #iiCreateuser#,
+      II_CREATETIME = #iiCreatetime#,
+      II_MODIFYUSER = #iiModifyuser#,
+      II_MODIFYTIME = #iiModifytime#,
+      II_EXT1 = #iiExt1#,
+      II_EXT2 = #iiExt2#,
+      II_EXT3 = #iiExt3#
+    where II_ID = #iiId#
+  </update>
+  
+  <select id="selectByProperty" resultMap="TegrityInfoResult" parameterClass="cn.id5.idreal_hr.commons.bo.verification.IntegrityInfoBO" >
+
+    select II_ID, II_FILL_DATE, II_APPLY_POSITION, II_EXPECTED_SALARY, II_NAME, II_SEX,
+      II_NATIONALITY, II_ID_NO, II_BIRTHDAY, II_NATION, II_NATIVE_PLACE, II_PHOTO,
+      II_POLITICAL_STATUS, II_MARITAL_STATUS, II_HAVE_CHILDREN_STATUS, II_PHONE, II_EMAIL,
+      II_PRESENT_ADDRESS, II_POSTALCODE, II_HOBBY, II_DRIVE_QUALIFICATION_PLACE,
+      II_DRIVE_QUALIFICATION_PERMIT, II_HAVE_CRIME, II_HAVE_DRUG, II_REMARK, CUI_ID, II_CREATEUSER,
+      II_CREATETIME, II_MODIFYUSER, II_MODIFYTIME, II_EXT1, II_EXT2, II_EXT3
+    from B_INTEGRITY_INFO
+    where 1=1 
+    <isNotNull property="cuiId">
+   		<isNotEmpty prepend="AND" property="cuiId">
+   			CUI_ID = #cuiId#
+   		</isNotEmpty>
+   	</isNotNull>
+  </select>
+  
+</sqlMap>

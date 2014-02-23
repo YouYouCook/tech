@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="users" >
+  <resultMap id="SResult" class="cn.krt.zbcg.commons.bo.system.UserBO" >
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="login_type" property="loginType" jdbcType="CHAR" />
+    <result column="role_type" property="roleType" jdbcType="CHAR" />
+     <result column="notice" property="notice" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="loginResult" class="cn.krt.zbcg.commons.bo.system.UserBO" >
+    <result column="login_name" property="loginName" jdbcType="VARCHAR" />
+    <result column="login_pwd" property="loginPwd" jdbcType="VARCHAR" />
+    <result column="login_role" property="loginRole" jdbcType="VARCHAR" />
+    <result column="login_username" property="loginUserName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="SResult" parameterClass="cn.krt.zbcg.commons.bo.system.UserBO" >
+    select user_id, username, password, name, phone, login_type, role_type,notice
+    from users
+    where user_id = #userId#
+  </select>
+  <select id="selectAll" resultMap="SResult" parameterClass="java.util.Map" >
+     SELECT * FROM ( SELECT  c.* from ( 
+     
+     select 
+     		user_id, username, password, name, phone, login_type, role_type,notice
+    from 	users
+    where  1=1
+     		<isNotNull property="username">
+				<isNotEmpty  property="username">
+				and username like '%$username$%'
+				</isNotEmpty>
+			</isNotNull>
+			<isNotNull property="name">
+				<isNotEmpty  property="name">
+				and name like '%$name$%'
+				</isNotEmpty>
+			</isNotNull>
+     ) c) a order by user_id desc
+    LIMIT  $ibegin$, 10
+  </select>
+  <select id="selectAllOfCount" resultClass="java.lang.String" parameterClass="java.util.Map" >
+     SELECT count(1) as ID from ( 
+     select 
+     		user_id, username, password, name, phone, login_type, role_type,notice
+    from 	users
+    where  1=1
+     		<isNotNull property="username">
+				<isNotEmpty  property="username">
+				and username like '%$username$%'
+				</isNotEmpty>
+			</isNotNull>
+			<isNotNull property="name">
+				<isNotEmpty  property="name">
+				and name like '%$name$%'
+				</isNotEmpty>
+			</isNotNull>
+     ) a
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="cn.krt.zbcg.commons.bo.system.UserBO" >
+    delete from users
+    where user_id = #userId#
+  </delete>
+  <insert id="insert" parameterClass="cn.krt.zbcg.commons.bo.system.UserBO" >
+    insert into users (user_id, username, password, name, phone, login_type, role_type,notice)
+    values (#userId#, #username#, #password#, #name#, #phone#, #loginType#, #roleType#,#notice#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="cn.krt.zbcg.commons.bo.system.UserBO" >
+    update users
+    set 
+      name = #name#,
+      phone = #phone#,
+      login_type = #loginType#,
+      role_type = #roleType#,
+      notice = #notice#
+    where user_id = #userId#
+  </update>
+  
+   <select id="getUserByName" resultClass="cn.krt.zbcg.commons.bo.system.UserBO" parameterClass="cn.krt.zbcg.commons.bo.system.UserBO" >
+    select user_id, username, password, name, phone, login_type, role_type,notice
+    from users
+    where username = #username#
+  </select>
+  <update id="updatePassword" parameterClass="cn.krt.zbcg.commons.bo.system.UserBO" >
+    update users set password = #password# where username = #username#
+  </update>
+  <select id="getUserByLoginName" resultMap="loginResult" parameterClass="cn.krt.zbcg.commons.bo.system.UserBO" >
+    select login_name, login_pwd, login_role,login_username
+    from loginuser
+    where login_name = #loginName#
+  </select>
+  <select id="getPasswordByCheck" resultMap="SResult" parameterClass="cn.krt.zbcg.commons.bo.system.UserBO" >
+    select user_id, username, password, name, phone, login_type, role_type,notice
+    from users
+    where username = #username# and password=#password#
+  </select><update id="updateUserPassword" parameterClass="cn.krt.zbcg.commons.bo.system.UserBO" >
+    update users set password = #password# where username = #username#
+  </update>
+  
+</sqlMap>

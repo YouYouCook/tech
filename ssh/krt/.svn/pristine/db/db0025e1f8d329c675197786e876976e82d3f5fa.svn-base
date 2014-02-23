@@ -1,0 +1,20 @@
+package cn.krt.zbcg.system.web.form;
+
+import org.ssi.struts.actionform.BaseForm;
+
+import cn.krt.zbcg.commons.bo.system.FukuandetailBO;
+
+public class FukuanForm  extends BaseForm{
+
+	FukuandetailBO fukuan = new FukuandetailBO();
+	
+
+	public FukuandetailBO getFukuan() {
+		return fukuan;
+	}
+
+	public void setFukuan(FukuandetailBO fukuan) {
+		this.fukuan = fukuan;
+	}
+
+}

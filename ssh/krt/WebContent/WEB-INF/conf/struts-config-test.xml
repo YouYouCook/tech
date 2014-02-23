@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE struts-config PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+    "dtd/struts-config_1_2.dtd">
+
+<struts-config>
+ <form-beans>
+ 		
+	    <!-- ************系统管理-员工FORM-BEANS配置 ************ -->
+	    <form-bean name="employeesForm" type="cn.id5.idreal_hr.system.web.form.EmployeesForm" />
+ </form-beans>
+<!-- ************系统管理-代码组ACTION配置****************    -->
+  <action-mappings>
+  <!-- ************   验证码ACTION   **************** -->
+  		 <action path="/image"
+        	type="org.ssi.struts.action.ImageAction"
+	        parameter="operate"
+			validate="false">
+	    </action>
+		
+		<!-- ************    用户管理ACTION  **************** -->
+  		<action path="/test"
+	        type="org.ssi.test.TestAction" 
+	        name="employeesForm" 
+	        scope="request" 
+	        parameter="operate"
+	        validate="false">
+	        <!-- ************   用户管理增删改查  **************** -->
+			<forward name="toUserManage" path="/WEB-INF/page/system/employeesList.jsp" />
+			<forward name="toAdd" path="/WEB-INF/page/system/employeesAdd.jsp" />
+			<forward name="toUpdate" path="/WEB-INF/page/system/employeesModify.jsp" />
+			<forward name="toSuppliersInfo" path="/WEB-INF/page/system/testSuppliersInfo.jsp" />
+			<forward name="toSuppliersInfoAdd" path="/WEB-INF/page/system/testSuppliersInfoAdd.jsp" />
+			<forward name="totestMakeSuppliersResult" path="/WEB-INF/page/system/testMakeSuppliersResult.jsp" />
+			
+			<forward name="toCheck" path="/WEB-INF/page/system/testLowPriceCustomer.jsp" />
+			<forward name="toProductProtect" path="/WEB-INF/page/system/testProductProtect.jsp" />
+			<forward name="toAddProduct" path="/WEB-INF/page/system/testAddproduct.jsp" />
+			<forward name="toCheckZbResult" path="/WEB-INF/page/system/testCheckZbResult.jsp" />
+			
+			<forward name="toLrpz" path="/WEB-INF/page/system/testLRZBPZ.jsp" />
+			<forward name="toSuppliers" path="/WEB-INF/page/system/testSuppliers.jsp" />
+			<forward name="toSuppliersLr" path="/WEB-INF/page/system/testSuppliersLr.jsp" />
+			
+			<forward name="toSuppliersLrModify" path="/WEB-INF/page/system/testSuppliersMdify.jsp" />
+			<forward name="toCheckProduct" path="/WEB-INF/page/system/testCheckProduct.jsp" />
+			<forward name="toCheckProductLr" path="/WEB-INF/page/system/testCheckProductLr.jsp" />
+			<forward name="testSuppliersResult" path="/WEB-INF/page/system/testSuppliersResult.jsp" />
+		
+			
+		</action>
+		
+  </action-mappings>
+</struts-config>

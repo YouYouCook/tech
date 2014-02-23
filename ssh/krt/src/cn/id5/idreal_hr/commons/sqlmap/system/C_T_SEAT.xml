@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="C_T_SEAT_LOGIN" >
+  <resultMap id="SeatResult" class="cn.id5.idreal_hr.commons.bo.system.SeatBO" >
+    <result column="SEAT_ID" property="seatId" jdbcType="DECIMAL" />
+    <result column="CUSTOMER_ID" property="customerId" jdbcType="DECIMAL" />
+    <result column="SEAT_ACCOUNT" property="seatAccount" jdbcType="VARCHAR" />
+    <result column="SEAT_PASSWORD" property="seatPassword" jdbcType="VARCHAR" />
+    <result column="SEAT_IS_ADMIN" property="seatIsAdmin" jdbcType="CHAR" />
+    <result column="SEAT_NAME" property="seatName" jdbcType="VARCHAR" />
+    <result column="SEAT_STATE" property="seatState" jdbcType="VARCHAR" />
+    <result column="SEAT_TYPE" property="seatType" jdbcType="CHAR" />
+    <result column="SEAT_DEPT" property="seatDept" jdbcType="VARCHAR" />
+    <result column="SEAT_POST" property="seatPost" jdbcType="VARCHAR" />
+    <result column="SEAT_MOBILE" property="seatMobile" jdbcType="VARCHAR" />
+    <result column="SEAT_EMAIL" property="seatEmail" jdbcType="VARCHAR" />
+    <result column="SEAT_DF" property="seatDf" jdbcType="VARCHAR" />
+    <result column="LAST_UPWD_TIME" property="lastUpwdTime" jdbcType="timestamp" />
+    <result column="LAST_LOGIN_TIME" property="lastLoginTime" jdbcType="timestamp" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByAccount" resultMap="SeatResult" parameterClass="cn.id5.idreal_hr.commons.bo.system.SeatBO" >
+    select SEAT_ID, CUSTOMER_ID, SEAT_ACCOUNT, SEAT_PASSWORD, SEAT_IS_ADMIN, SEAT_NAME, SEAT_STATE,
+      SEAT_TYPE, SEAT_DEPT, SEAT_POST, SEAT_MOBILE, SEAT_EMAIL, SEAT_DF,LAST_UPWD_TIME,LAST_LOGIN_TIME,REMARK
+    from C_T_SEAT
+    where SEAT_ACCOUNT = '$seatAccount$'
+  </select>
+   <select id="getPasswordBySeat" resultMap="SeatResult" parameterClass="cn.id5.idreal_hr.commons.bo.system.SeatBO" >
+    SELECT 
+		    SEAT_ID, 
+		    CUSTOMER_ID, 
+		    SEAT_ACCOUNT, 
+		    SEAT_PASSWORD, 
+		    SEAT_IS_ADMIN, 
+		    SEAT_NAME, 
+		    SEAT_STATE,
+		    SEAT_TYPE, 
+		    SEAT_DEPT, 
+		    SEAT_POST, 
+		    SEAT_MOBILE, 
+		    SEAT_EMAIL, 
+		    SEAT_DF,
+		    LAST_UPWD_TIME,
+		    LAST_LOGIN_TIME,
+		    REMARK
+    FROM 
+    		C_T_SEAT
+    WHERE 
+    		SEAT_ACCOUNT = '$seatAccount$' AND	SEAT_PASSWORD = '$seatPassword$'
+  </select>
+    <update id="updateSeatPassword" parameterClass="cn.id5.idreal_hr.commons.bo.system.SeatBO" >
+    update 
+    		C_T_SEAT
+    
+    SET 
+      		SEAT_PASSWORD = #seatPassword#,
+      		LAST_UPWD_TIME = sysdate
+      		
+    WHERE 
+    		SEAT_ACCOUNT = '$seatAccount$'
+  </update>
+  <select id="selectAll" resultMap="SeatResult" parameterClass="java.util.Map" >
+
+     SELECT * FROM ( SELECT ROWNUM AS NUMROW, c.* from ( 
+    select SEAT_ID, CUSTOMER_ID, SEAT_ACCOUNT, SEAT_PASSWORD, SEAT_IS_ADMIN, SEAT_NAME, SEAT_STATE,
+      SEAT_TYPE, SEAT_DEPT, SEAT_POST, SEAT_MOBILE, SEAT_EMAIL, SEAT_DF,LAST_UPWD_TIME,LAST_LOGIN_TIME,REMARK
+    from C_T_SEAT
+     ) c) 
+     <![CDATA[ WHERE NUMROW >= $ibegin$  AND NUMROW < $iend$  ]]>
+  </select>
+  <select id="selectAllOfCount" resultClass="java.lang.String" parameterClass="java.util.Map" >
+ 
+     SELECT count(1) as ID from ( 
+    select SEAT_ID, CUSTOMER_ID, SEAT_ACCOUNT, SEAT_PASSWORD, SEAT_IS_ADMIN, SEAT_NAME, SEAT_STATE,
+      SEAT_TYPE, SEAT_DEPT, SEAT_POST, SEAT_MOBILE, SEAT_EMAIL, SEAT_DF,LAST_UPWD_TIME,LAST_LOGIN_TIME,REMARK
+    from C_T_SEAT
+     ) 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="cn.id5.idreal_hr.commons.bo.system.SeatBO" >
+  
+    delete from C_T_SEAT
+    where SEAT_ID = #seatId#
+  </delete>
+  <insert id="insert" parameterClass="cn.id5.idreal_hr.commons.bo.system.SeatBO" >
+ 
+    insert into C_T_SEAT
+     (
+	      SEAT_ID, 
+	      CUSTOMER_ID, 
+	      SEAT_ACCOUNT, 
+	      SEAT_PASSWORD, 
+	      SEAT_IS_ADMIN,
+	      SEAT_NAME, 
+	      SEAT_STATE, 
+	      SEAT_TYPE, 
+	      SEAT_DEPT, 
+	      SEAT_POST, 
+	      SEAT_MOBILE, 
+	      SEAT_EMAIL,
+	      SEAT_DF, 
+	      REMARK
+      )
+    values 
+    (
+		    #seatId#, 
+		    #customerId#, 
+		    #seatAccount#, 
+		    #seatPassword#, 
+		    #seatIsAdmin#, 
+		    #seatName#,
+		    #seatState#, 
+		    #seatType#, 
+		    #seatDept#, 
+		    #seatPost#, 
+		    #seatMobile#, 
+		    #seatEmail#,
+		    #seatDf#, 
+		    #remark#
+    )
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="cn.id5.idreal_hr.commons.bo.system.SeatBO" >
+    UPDATE 
+    		C_T_SEAT
+    SET 
+	      CUSTOMER_ID = #customerId#,
+	      SEAT_ACCOUNT = #seatAccount#,
+	      SEAT_PASSWORD = #seatPassword#,
+	      SEAT_IS_ADMIN = #seatIsAdmin#,
+	      SEAT_NAME = #seatName#,
+	      SEAT_STATE = #seatState#,
+	      SEAT_TYPE = #seatType#,
+	      SEAT_DEPT = #seatDept#,
+	      SEAT_POST = #seatPost#,
+	      SEAT_MOBILE = #seatMobile#,
+	      SEAT_EMAIL = #seatEmail#,
+	      SEAT_DF = #seatDf#,
+	      REMARK = #remark#
+	      
+    WHERE 
+    	 SEAT_ID = #seatId#
+  </update>
+  <update id="updateLoginTime" parameterClass="cn.id5.idreal_hr.commons.bo.system.SeatBO" >
+    UPDATE 
+    		C_T_SEAT
+    SET 
+	      LAST_LOGIN_TIME = #lastLoginTime#
+	    
+	      
+    WHERE 
+    	 SEAT_ID = '$seatId$'
+  </update>
+</sqlMap>

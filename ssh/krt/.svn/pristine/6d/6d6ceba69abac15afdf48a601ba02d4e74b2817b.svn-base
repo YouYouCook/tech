@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="S_T_EMP_CUSTOMER" >
+  <resultMap id="EmpCustomerResult" class="cn.id5.idreal_hr.commons.bo.system.EmpCustomerBO" >
+    <result column="CUSTOMERID" property="customerid" jdbcType="DECIMAL" />
+    <result column="EMPID" property="empid" jdbcType="DECIMAL" />
+  </resultMap>
+  <select id="selectAll" resultMap="EmpCustomerResult" parameterClass="java.util.Map" >
+     SELECT * FROM ( SELECT ROWNUM AS NUMROW, c.* from ( 
+     select CUSTOMERID, EMPID
+    from S_T_EMP_CUSTOMER
+     ) c) 
+     <![CDATA[ WHERE NUMROW >= $ibegin$  AND NUMROW < $iend$  ]]>
+  </select>
+  <select id="selectAllOfCount" resultClass="java.lang.String" parameterClass="java.util.Map" >
+     SELECT count(1) as ID from ( 
+     select CUSTOMERID, EMPID
+    from S_T_EMP_CUSTOMER
+     ) 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="cn.id5.idreal_hr.commons.bo.system.EmpCustomerBO" >
+    delete from S_T_EMP_CUSTOMER
+    where CUSTOMERID = #customerid#
+      and EMPID = #empid#
+  </delete>
+  <insert id="insert" parameterClass="cn.id5.idreal_hr.commons.bo.system.EmpCustomerBO" >
+    insert into S_T_EMP_CUSTOMER (CUSTOMERID, EMPID)
+    values (#customerid#, #empid#)
+  </insert>
+</sqlMap>

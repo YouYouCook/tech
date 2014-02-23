@@ -1,0 +1,19 @@
+package cn.krt.zbcg.system.web.form;
+
+import org.ssi.struts.actionform.BaseForm;
+
+import cn.krt.zbcg.commons.bo.system.ZhaobiaojinduBO;
+
+public class ZhaobiaojinduForm  extends BaseForm{
+	
+	public ZhaobiaojinduBO getZhaobiaojindubo() {
+		return zhaobiaojindubo;
+	}
+
+	public void setZhaobiaojindubo(ZhaobiaojinduBO zhaobiaojindubo) {
+		this.zhaobiaojindubo = zhaobiaojindubo;
+	}
+
+	ZhaobiaojinduBO zhaobiaojindubo = new ZhaobiaojinduBO();
+
+}

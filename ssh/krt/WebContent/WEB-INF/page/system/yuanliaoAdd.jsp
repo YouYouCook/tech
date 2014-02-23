@@ -1,0 +1,193 @@
+<%@ page language="java"  pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/ssi.tld" prefix="ssi"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>原料订货确认-增加</title>
+<link href="<%=request.getContextPath()%>/styles/gzt_css.css" rel="stylesheet" type="text/css" />
+<script language="javascript" src="<%=request.getContextPath()%>/js/jquery-1.2.6.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/commons.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/control.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/formcheck.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/ajax.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/livevalidation_standalone.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/My97DatePicker/WdatePicker.js"></script>
+</head>
+
+<html:form method="post" action="/zhaobiaojinduManage.do?operate=toAdd"   enctype="multipart/form-data">
+<input type="hidden" name="operate">
+<input type="hidden" name="medicineZbid">
+<div class="weizhi">
+	<div class="weizhi_bj">添加原料订货</div>
+</div>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table_add">
+  <tr>
+    <th >供方单位：</th>
+	<td><input type="text" name="zhaobiaojinduBo.gonghuoshang"  value="${medicindezbBO.medicineJbBO.customerBO.name}"  styleId="N_str_zhaobiaojinduBo.gonghuoshang" title="供方单位"  />
+	<input name="button" type="button" value="查询" onclick="openwinZhaobiaoInfo();" />
+	</td>
+	<th>需方单位：</th>
+    <td><html:text property="zhaobiaojinduBo.xufangdanwei"  value="北京康仁堂药业有限公司"  styleId="N_str_zhaobiaojinduBo.xufangdanwei"  title="需方单位" />
+	</td>
+</tr>
+<tr>	
+	<th>联系人：</th>
+    <td><html:text property="zhaobiaojinduBo.gonghuoshang"   value="${medicindezbBO.medicineJbBO.customerBO.lxr}"  styleId="N_str_zhaobiaojinduBo.gonghuoshang"  title="联系人" />
+	</td>
+	<th >开标日期：</th>
+	<td><input type="text" name="zhaobiaojinduBo.kaibiaoriqi"    value="${medicindezbBO.beginDate}"   readonly="true"  title="开标日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="Wdate" />
+	</td>
+</tr>
+<tr>	
+	<th>电话：</th>
+    <td><html:text property="zhaobiaojinduBo.dianhua"  value="${medicindezbBO.medicineJbBO.customerBO.telephone}"   styleId="N_str_zhaobiaojinduBo.dianhua"  title="电话" />
+	</td>
+	<th>最迟交大货日期：</th>
+    <td><input type="text" name="zhaobiaojinduBo.zcjdhrq"    value="${medicindezbBO.endDate}"   readonly="true"  title="最迟交大货日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="Wdate" />
+	</td>
+</tr>
+<!-- 
+<tr>
+	<th>质保金缴纳日期 ：</th>
+    <td><input type="text" name="zhaobiaojinduBo.zhibaojinjnrq"   readonly="true"  title="质保金缴纳日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="Wdate" />
+	</td>
+	<th></th>
+    <td></td>
+ </tr> -->
+ <tr>
+    <td>
+    <th>品种明细</th>
+    </td>
+    <td></td><td></td>
+ </tr>   
+ <tr>
+	<th>品名 ： </th>
+	<td><html:text property="zhaobiaojinduBo.pinming"   value="${medicindezbBO.medicineJbBO.medicineCgBO.medicineBO.medicineName}"   styleId="Y_str_zhaobiaojinduBo.pinming"    title="品名" />
+	</td>
+	<th>数量（kg） ：</th>
+	<td><html:text property="zhaobiaojinduBo.shuliang" value="${medicindezbBO.medicineJbBO.medicineCgBO.cgQty}"   styleId="Y_str_zhaobiaojinduBo.shuliang"  title="数量（kg）" />
+	</td>
+ </tr>
+ <tr>
+	<th>产地 ：</th>
+	<td><html:text property="zhaobiaojinduBo.chandi"    value="${medicindezbBO.medicineJbBO.ylcd}"  styleId="Y_str_zhaobiaojinduBo.chandi"     title="产地" />
+	</td>
+	<th>单价（元/kg） ：</th>
+	<td><html:text property="zhaobiaojinduBo.danjia" value="${medicindezbBO.medicineJbBO.price}"  styleId="Y_str_zhaobiaojinduBo.danjia"     title="单价（元/kg）" />
+	</td>
+ </tr>
+ <tr>
+	<th>金额(元) ：</th>	
+	<td><html:text property="zhaobiaojinduBo.jine" value="${medicindezbBO.medicineJbBO.medicineCgBO.cgQty*medicindezbBO.medicineJbBO.price}"  styleId="Y_str_zhaobiaojinduBo.jine"    title="金额(元)" />
+	</td>
+	<th>质保金（元） ：</th>
+	<td><html:text property="zhaobiaojinduBo.zhibaojin"   value="${zhibaojin}"  styleId="Y_str_zhaobiaojinduBo.zhibaojin"    title="质保金（元）" />
+	</td>
+ </tr>
+ <tr>
+	<th>装卸费（元） ：</th>
+	<td><html:text property="zhaobiaojinduBo.zhuangxiefei" value="${medicindezbBO.medicineJbBO.medicineCgBO.cgQty*0.05}" styleId="Y_str_zhaobiaojinduBo.zhuangxiefei"    title="装卸费（元）" />
+	</td>
+	<th>确认交货日期 ：</th>
+	<td><input type="text" name="zhaobiaojinduBo.qrjhrq"   readonly="true"  title="确认交货日期" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="Wdate" />
+	</td>
+ </tr>
+  <tr>
+  <th></th>
+  	<td>
+ 	<input type="button" name="Submit" value="生成装卸费和质保金" onclick="generateFee()"/>
+ 	</td>
+ </tr>
+ <tr>
+	<th>品种属性 ：</th>
+	<td><html:text property="zhaobiaojinduBo.pinzhongshuxing"  value="${medicindezbBO.medicineJbBO.medicineCgBO.pinzhongshuxing}"  styleId="Y_str_zhaobiaojinduBo.pinzhongshuxing"      title="品种属性" />
+	</td>
+	<th>备注 ：</th>
+	<td><html:text property="zhaobiaojinduBo.beizhu" styleId="N_str_zhaobiaojinduBo.beizhu"   title="备注" />
+	</td>
+ </tr>
+ 
+ <tr>
+    <td colspan="4">
+	<div>
+	<input type="button" name="Submit" value="确 认" onclick="add()"/>
+    <input type="button" name="Submit2" value="重 置" onclick="reset();"/>
+    <input type="button" name="Submit3" value="返 回" onclick="backup();"/>
+	</div>
+	</td>
+  </tr>
+</table>
+	    
+</html:form>
+</html>
+<script language="JavaScript">
+
+	
+		
+	function generateFee(){
+		
+		   var danjia =   document.getElementById("Y_str_zhaobiaojinduBo.danjia").value;
+		   if(danjia===""){
+			   alert("单价为空，请输入单价");
+			   return;
+		   }
+		  var  shuliang = document.getElementById("Y_str_zhaobiaojinduBo.shuliang").value;
+		   if(shuliang===""){
+			   alert("数量为空，请输数量");
+			   return;
+		   }
+		 var sum = parseFloat(danjia)*shuliang;
+		 document.getElementById("Y_str_zhaobiaojinduBo.jine").value = sum;
+		 var zhibaojin;
+		 if(sum>=300000){
+				zhibaojin = "30000";
+			}else{
+				zhibaojin = Math.floor(sum*0.06*100)/100;
+			}
+		 document.getElementById("Y_str_zhaobiaojinduBo.zhibaojin").value = zhibaojin;
+		 
+		 var zhuangxiefei = 0.05*shuliang;
+		 document.getElementById("Y_str_zhaobiaojinduBo.zhuangxiefei").value = zhibaojin;
+	}
+    function add()
+    {	
+    	
+        if(checkSubmit(document.zhaobiaojinduForm)){
+    		if(confirm("确定要增加此信息吗？"))
+	        {
+	         	document.zhaobiaojinduForm.action="zhaobiaojinduManage.do?operate=add";
+	        	document.zhaobiaojinduForm.submit();
+	        }
+         }
+    	
+    }
+    
+    function backup()
+    {
+    	document.zhaobiaojinduForm.action="zhaobiaojinduManage.do?operate=list";
+        document.zhaobiaojinduForm.submit();
+    }
+
+   function reset()
+    {       		
+    	document.zhaobiaojinduForm.reset();  
+    }
+   
+	function openwinZhaobiaoInfo()
+    {
+    	var returnValue=window.showModalDialog("<%=request.getContextPath()%>/MedicineZbAction.do?operate=resultForCgWindowList",window, "dialogWidth:800px,dialogHeight:535px,dialogTop:200px,dialogLeft,200px ");
+ 		if(returnValue && returnValue!="")
+ 		{
+	 	  	var  ret =returnValue.split(',');
+	 	   	window.document.all['medicineZbid'].value =ret[0];
+	 	   document.zhaobiaojinduForm.submit();
+	 	 	//document.getElementById("pinzhongid").value=ret[1];
+  		}	
+ 	}
+</script>
+
+
+

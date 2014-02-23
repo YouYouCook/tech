@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="GBOSS_S_T_FUNC" >
+  <resultMap id="FuncResult" class="cn.id5.idreal_hr.commons.bo.system.FuncBO" >
+  
+    <result column="FUNC_ID" property="funcId" jdbcType="long" />
+    <result column="FUNC_CODE" property="funcCode" jdbcType="VARCHAR" />
+    <result column="FUNC_PARENT_CODE" property="funcParentCode" jdbcType="long" />
+    <result column="FUNC_NAME" property="funcName" jdbcType="VARCHAR" />
+    <result column="FUNC_TYPE" property="funcType" jdbcType="VARCHAR" />
+    <result column="FUNC_STATE" property="funcState" jdbcType="VARCHAR" />
+    <result column="FUNC_URL" property="funcUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="result" class="cn.id5.idreal_hr.commons.bo.system.FuncBO" extends="FuncResult">
+	      <result property="roles" column="func_Id" select="GBOSS_S_T_ROLE.getRoleByResourceId" />
+	</resultMap>
+	
+	<select id="getResourceByRoleId" parameterClass="long" resultClass="cn.id5.idreal_hr.commons.bo.system.FuncBO" resultMap="result">
+	      select r.* from S_T_FUNC r where r.FUNC_ID in
+	      (select FUNC_ID from S_T_ROLE_FUNC where ROLE_ID=#value#)
+	</select>
+	<!-- 根据seatId查找菜单 -->
+	<select id="getFuncBySeatId" parameterClass="java.util.Map" resultClass="cn.id5.idreal_hr.commons.bo.system.FuncBO" resultMap="result">
+	   select func.* from s_t_func func
+	   where func.func_id in(
+	       select funcr.func_id from s_t_role_func funcr
+	       where funcr.role_id in (
+           select sr.role_id from c_t_seat_role sr
+           where sr.seat_id=#seatId#
+     	)
+  	)
+	</select>
+	
+	<select id="getResourcesByRoleId" parameterClass="java.util.Map"  resultMap="result" resultClass="cn.id5.idreal_hr.commons.bo.system.FuncBO">
+        select r.* from S_T_FUNC r where r.FUNC_ID not in
+        (select FUNC_ID from S_T_ROLE_FUNC where ROLE_ID=#roleId#)	order by r.FUNC_ID ASC
+  </select>
+  <select id="getResourcesByFuncId" parameterClass="cn.id5.idreal_hr.commons.bo.system.FuncBO"  resultMap="result" resultClass="cn.id5.idreal_hr.commons.bo.system.FuncBO">
+      select r.* from S_T_FUNC r where  FUNC_ID=#funcId# order by r.FUNC_ID ASC
+        
+  </select>
+  <select id="getResources" parameterClass="java.util.Map" resultClass="cn.id5.idreal_hr.commons.bo.system.FuncBO" resultMap="result">
+	      select r.* from S_T_FUNC r where r.FUNC_ID in
+	      (select FUNC_ID from S_T_ROLE_FUNC where ROLE_ID in (select ROLE_ID from S_T_EMP_ROLE where EMP_ID=#empId# )) order by r.FUNC_ID ASC
+  </select>
+	
+	<select id="getallResource" parameterClass="java.util.Map" resultClass="cn.id5.idreal_hr.commons.bo.system.FuncBO" resultMap="result">
+	      select * from S_T_FUNC order by FUNC_ID ASC	      
+	</select>
+	
+	<select id="getFunIdByCode" parameterClass="cn.id5.idreal_hr.commons.bo.system.FuncBO" resultClass="cn.id5.idreal_hr.commons.bo.system.FuncBO" resultMap="result">
+	      select * from S_T_FUNC where 	FUNC_PARENT_CODE=#funcParentCode#    order by FUNC_ID ASC
+	</select>
+	
+	<select id="getResourcesBySeatId" parameterClass="java.util.Map" resultClass="cn.id5.idreal_hr.commons.bo.system.FuncBO" resultMap="result">
+	      select r.* from S_T_FUNC r where r.FUNC_ID in
+	      (select FUNC_ID from S_T_ROLE_FUNC where ROLE_ID in (select ROLE_ID from S_T_EMP_ROLE where EMP_ID=#empId# ))
+  </select>
+  
+  <!-- 改动过后的权限集合 -->
+  <select id="getallResourceByC" parameterClass="java.util.Map" resultClass="cn.id5.idreal_hr.commons.bo.system.FuncBO" resultMap="result">
+	      select distinct(func_id) func_id,func_code,func_parent_code,func_name,func_type,func_state,func_url from 
+		   (select * from s_t_func where func_id in (select func_parent_code from s_t_func t where func_state=3)
+			union
+			select * from s_t_func t where func_state=3
+			union
+			select * from s_t_func where func_id in 
+			(select func_parent_code from s_t_func where func_id in (select func_parent_code from s_t_func t where func_state=3))
+			union
+			select * from s_t_func where func_state=1
+			union
+			select * from s_t_func where func_id in (select func_parent_code from s_t_func t where func_state=1)
+			union
+			select * from s_t_func where func_id in 
+			(select func_parent_code from s_t_func where func_id in (select func_parent_code from s_t_func t where func_state=1))
+			) t order by FUNC_ID ASC	      
+	</select>
+	
+	<select id="getallResourceByG" parameterClass="java.util.Map" resultClass="cn.id5.idreal_hr.commons.bo.system.FuncBO" resultMap="result">       
+	      select distinct(func_id) func_id,func_code,func_parent_code,func_name,func_type,func_state,func_url from
+			(select * from s_t_func where func_id in (select func_parent_code from s_t_func t where func_state=3)
+			union
+			select * from s_t_func t where func_state=3
+			union
+			select * from s_t_func where func_id in
+			(select func_parent_code from s_t_func where func_id in (select func_parent_code from s_t_func t where func_state=3))
+			union
+			select * from s_t_func where func_state=0
+			) t   order by FUNC_ID ASC
+	</select>
+</sqlMap>

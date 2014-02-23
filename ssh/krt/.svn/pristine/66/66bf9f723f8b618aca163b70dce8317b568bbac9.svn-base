@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="GBOSS_S_T_DEPT" >
+
+  <resultMap id="DeptResult" class="cn.id5.idreal_hr.commons.bo.system.DeptBO" >
+    <result column="DEPT_ID" property="deptId" jdbcType="LONG" />
+    <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+    <result column="DEPT_NAME" property="deptName" jdbcType="VARCHAR" />
+    <result column="EMP_NAME" property="empName" jdbcType="VARCHAR"	/>
+  </resultMap>
+	
+	
+	<select id="selectEmployeesById"   resultClass="cn.id5.idreal_hr.commons.bo.system.DeptBO"  parameterClass="cn.id5.idreal_hr.commons.bo.system.DeptBO" >
+   select 		d.DEPT_CODE as deptCode ,
+  				d.DEPT_NAME as deptName,
+   			   	(e.EMP_NAME) as empName   
+   from 
+   				s_t_dept d INNER JOIN s_t_employees e ON e.DEPT_ID=d.DEPT_ID 
+   where 		
+   				d.DEPT_ID=#deptId#
+   
+  </select>
+    <select id="selectAll" resultClass="cn.id5.idreal_hr.commons.bo.system.DeptBO"  >
+    SELECT 
+    	   DEPT_ID as deptId, 
+    	   DEPT_CODE as deptCode, 
+    	   DEPT_NAME as deptName
+    FROM   
+    	   S_T_DEPT
+    	   
+	ORDER BY DEPT_CODE ASC
+   
+  </select>
+  <insert id="insert" parameterClass="cn.id5.idreal_hr.commons.bo.system.DeptBO" >
+	  <selectKey resultClass="long" keyProperty="deptId" type="pre" > 
+		SELECT SEQ_SYSTEM.NEXTVAL AS ID FROM DUAL 
+	  </selectKey>
+    insert into S_T_DEPT (DEPT_ID, DEPT_CODE, DEPT_NAME)
+    values (#deptId#, #deptCode#, #deptName#)
+  </insert>
+  
+    <select id="selectByPrimaryKey" 	resultClass="cn.id5.idreal_hr.commons.bo.system.DeptBO" parameterClass="cn.id5.idreal_hr.commons.bo.system.DeptBO" >
+    SELECT 
+    	   DEPT_ID as deptId, 
+    	   DEPT_CODE as deptCode, 
+    	   DEPT_NAME as deptName
+    FROM   
+    	   S_T_DEPT
+    WHERE DEPT_ID=#deptId#
+  </select>
+  
+  <update id="update" parameterClass="cn.id5.idreal_hr.commons.bo.system.DeptBO" >
+    update S_T_DEPT
+    set 
+      DEPT_NAME = #deptName#
+      
+    where DEPT_ID = #deptId#
+  </update>
+  <delete id="deleteByPrimaryKey" parameterClass="cn.id5.idreal_hr.commons.bo.system.DeptBO" >
+    delete from S_T_DEPT
+    where DEPT_ID = #deptId#
+  </delete>
+   <select id="selectByCode" resultClass="cn.id5.idreal_hr.commons.bo.system.DeptBO"  >
+    SELECT 
+    	   DEPT_ID as deptId, 
+    	   DEPT_CODE as deptCode, 
+    	   DEPT_NAME as deptName
+    FROM   
+    	   S_T_DEPT
+    WHERE 
+    	   DEPT_CODE = '$deptCode$'
+   
+  </select>
+</sqlMap>

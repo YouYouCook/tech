@@ -1,0 +1,35 @@
+package cn.krt.zbcg.system.web.form;
+
+import org.ssi.struts.actionform.BaseForm;
+
+import cn.krt.zbcg.commons.bo.system.ZhaobiaojinduBO;
+
+public class ZhaobiaojinduForm  extends BaseForm{
+	
+	public ZhaobiaojinduBO getZhaobiaojindubo() {
+		return zhaobiaojindubo;
+	}
+
+	public void setZhaobiaojindubo(ZhaobiaojinduBO zhaobiaojindubo) {
+		this.zhaobiaojindubo = zhaobiaojindubo;
+	}
+
+	ZhaobiaojinduBO zhaobiaojindubo = new ZhaobiaojinduBO();
+	
+	
+	
+	
+	private String medicineZbid;
+
+
+
+
+	public String getMedicineZbid() {
+		return medicineZbid;
+	}
+
+	public void setMedicineZbid(String medicineZbid) {
+		this.medicineZbid = medicineZbid;
+	}
+
+}

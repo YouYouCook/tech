@@ -1,0 +1,113 @@
+package cn.krt.zbcg.system.web.action;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.ssi.common.Operate;
+import org.ssi.common.PageInfo;
+import org.ssi.struts.action.SSIDispatchAction;
+
+import cn.krt.zbcg.commons.bo.system.FukuandetailBO;
+import cn.krt.zbcg.system.services.IFukuanDetailServices;
+import cn.krt.zbcg.system.web.form.FapiaoForm;
+import cn.krt.zbcg.system.web.form.FukuanForm;
+
+public class FukuanAction  extends SSIDispatchAction{
+
+	IFukuanDetailServices fukuanservices;
+
+	
+	public IFukuanDetailServices getFukuanservices() {
+		if (this.fukuanservices == null) {
+			this.fukuanservices = ((IFukuanDetailServices) getBean("fukuanServices"));
+		}
+		return this.fukuanservices;
+	}
+
+
+
+	public void setFukuanservices(IFukuanDetailServices fukuanservices) {
+		this.fukuanservices = fukuanservices;
+	}
+
+	public ActionForward toAdd(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward("toAdd");
+	}
+	
+	public ActionForward add(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		FukuanForm fukuanForm = (FukuanForm) form;
+		FukuandetailBO fukuanbo = fukuanForm.getFukuanDetailbo();
+		try {
+			getFukuanservices().insert(fukuanbo);
+			request.setAttribute("exception.message", "增加成功！");
+		} catch (Exception e) {
+			request.setAttribute("exception.message", "添加失败");
+			ExceptionUtils.getFullStackTrace(e);
+			   e.printStackTrace();
+		}
+		return list(mapping, form, request, response);
+	}
+	
+	public ActionForward toUpdate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+		    throws Exception
+		  {
+			FukuanForm fukuanForm = (FukuanForm) form;
+		    String ids = fukuanForm.getSelectNos()[0];
+		    String[] a = ids.split(",");
+		    String id = a[0].trim();
+		    FukuandetailBO fukuanbo = getFukuanservices().findById(Integer.valueOf(Integer.parseInt(id)));
+		    request.setAttribute("fukuanDetailbo", fukuanbo);
+		    return mapping.findForward("toUpdate");
+	}
+	
+	public ActionForward update(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		FukuanForm fukuanForm = (FukuanForm) form;
+		FukuandetailBO fukuanbo = fukuanForm.getFukuanDetailbo();
+		try {
+			getFukuanservices().update(fukuanbo);
+		} catch (Exception e) {
+			ExceptionUtils.getFullStackTrace(e);
+			e.printStackTrace();
+		}
+		request.setAttribute("exception.message", "修改信息成功！");
+		return list(mapping, form, request, response);
+	}
+	public ActionForward toDelete(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		FukuanForm fukuanForm = (FukuanForm) form;
+		String[] ids = fukuanForm.getSelectNos();
+		try {
+			getFukuanservices().delete(ids);
+		} catch (Exception localException) {
+		}
+		return list(mapping, form, request, response);
+	}
+	public ActionForward list(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		FukuanForm fukuanForm = (FukuanForm) form;
+		PageInfo pageInfo = new PageInfo();
+		getFukuanservices().setRequest(request);
+		Map map = Operate.describe(fukuanForm);
+		List fukuanlist = getFukuanservices().findAll(pageInfo, map);
+		request.setAttribute("fukuanList", fukuanlist);
+		request.setAttribute("pageInfo", pageInfo);
+		return mapping.findForward("fukuanList");
+	}
+	
+
+}

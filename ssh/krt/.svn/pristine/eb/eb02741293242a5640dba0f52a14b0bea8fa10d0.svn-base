@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Config" >
+
+  <typeAlias alias="configBO" type="cn.id5.idreal_hr.commons.bo.system.ConfigBO" />
+
+  <resultMap id="configResult" class="cn.id5.idreal_hr.commons.bo.system.ConfigBO" >
+    <result column="PARA_CODE" property="paraCode" jdbcType="VARCHAR" />
+    <result column="PARA_NAME" property="paraName" jdbcType="VARCHAR" />
+    <result column="PARA_VALUE" property="paraValue" jdbcType="VARCHAR" />
+    <result column="PARA_GROUP" property="paraGroup" jdbcType="VARCHAR" />
+    <result column="PARA_INFO" property="paraInfo" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="configResult" parameterClass="configBO" >
+    select PARA_CODE, PARA_NAME, PARA_VALUE, PARA_GROUP, PARA_INFO
+    from S_T_CONFIG
+    where PARA_CODE = #paraCode#
+  </select>
+  
+  <select id="selectAll" resultMap="configResult" parameterClass="java.util.Map" > 
+    SELECT * FROM ( SELECT ROWNUM AS NUMROW, c.* from ( select PARA_CODE, PARA_NAME, PARA_VALUE, PARA_GROUP, PARA_INFO
+    from S_T_CONFIG  WHERE 1=1 
+	<isNotNull property="paraCode">
+		<isNotEmpty  property="paraCode">
+		and PARA_CODE like '%$paraCode$%'
+		</isNotEmpty> 
+	</isNotNull>
+	<isNotNull property="paraName">
+		<isNotEmpty  property="paraName">
+		and PARA_NAME like '%$paraName$%'
+		</isNotEmpty>
+	</isNotNull>
+	<isNotNull property="paraGroup">
+		<isNotEmpty  property="paraGroup">
+		and PARA_GROUP = '$paraGroup$'
+		</isNotEmpty>
+	</isNotNull>
+      ORDER BY PARA_GROUP DESC) c)    
+     <![CDATA[
+      WHERE NUMROW >= $ibegin$  AND NUMROW < $iend$
+    ]]> 
+  </select>
+  
+  <select id="selectAllOfCount" resultClass="java.lang.String" parameterClass="java.util.Map">
+     select count(1) as ID from S_T_CONFIG 
+     WHERE 1=1 
+	<isNotNull property="paraCode">
+		<isNotEmpty  property="paraCode">
+		and PARA_CODE like '%$paraCode$%'
+		</isNotEmpty> 
+	</isNotNull>
+	<isNotNull property="paraName">
+		<isNotEmpty  property="paraName">
+		and PARA_NAME like '%$paraName$%'
+		</isNotEmpty>
+	</isNotNull>
+	<isNotNull property="paraGroup">
+		<isNotEmpty  property="paraGroup">
+		and PARA_GROUP = '$paraGroup$'
+		</isNotEmpty>
+	</isNotNull>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="configBO" >
+    delete from S_T_CONFIG
+    where PARA_CODE = #paraCode#
+  </delete>
+  
+  <insert id="insert" parameterClass="configBO" >
+    insert into S_T_CONFIG (PARA_CODE, PARA_NAME, PARA_VALUE, PARA_GROUP, PARA_INFO)
+    values (#paraCode#, #paraName#, #paraValue#, #paraGroup#,
+      #paraInfo#)
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterClass="configBO" >
+    update 
+    	S_T_CONFIG
+    set 
+    	PARA_NAME = '$paraName$',
+      	PARA_VALUE = '$paraValue$',
+      	PARA_GROUP = '$paraGroup$',
+      	PARA_INFO = '$paraInfo$'
+    where
+    	 PARA_CODE = '$paraCode$'
+  </update>
+   <select id="getParaCode" resultMap="configResult" parameterClass="String" >
+    select PARA_CODE, PARA_NAME, PARA_VALUE, PARA_GROUP, PARA_INFO
+    from S_T_CONFIG
+    where PARA_CODE = #value#
+  </select>
+  <select id="findByParaInfo" resultMap="configResult" parameterClass="configBO" >
+    select PARA_CODE, PARA_NAME, PARA_VALUE, PARA_GROUP, PARA_INFO
+    from S_T_CONFIG
+    where PARA_INFO = #paraInfo#
+  </select>
+</sqlMap>

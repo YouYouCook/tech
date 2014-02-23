@@ -1,0 +1,125 @@
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/ssi.tld" prefix="ssi"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>VIP供应商管理-增加</title>
+<link href="<%=request.getContextPath()%>/styles/gzt_css.css" rel="stylesheet" type="text/css" />
+<script language="javascript" src="<%=request.getContextPath()%>/js/commons.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/control.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/formcheck.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/ajax.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<jsp:include page="/common/ajaxSession.jsp" />
+<html:form method="post" action="/vip.do?operate=add">
+<input type="hidden" name="medicineId" id="medicineId"/>
+<input type="hidden" name="customerId" id="customerId"/>
+<input type="hidden" name="customerAccount" id="customerAccount"/>
+<div class="weizhi">
+	<div class="weizhi_bj">添加信息</div>
+</div>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table_add">
+	<tr>
+    <td colspan="2">注意：<span>*</span> 号为必填项！</td>
+  	</tr>
+  <tr>
+    <th width="19%">品名：</th>
+    <td width="81%"><html:text property="customerVipBO.medicineName" styleId="Y_str_customerVipBO.medicineName" readonly="true"  title="品名" maxlength="50">></html:text>
+    <input name="button" type="button" value="查询" onclick="openwinMedicine();" /> <span>*</span>
+	</td>     
+  </tr>
+  <tr>
+    <th>供应商：</th>
+    <td><html:text property="customerVipBO.customerName" styleId="Y_str_customerVipBO.customerName" readonly="true" title="供应商" maxlength="50"></html:text>
+    <input name="button" type="button" value="查询" onclick="openwinSuppliers();" /> <span>*</span>
+	</td>
+  </tr>
+  <tr>
+    <td colspan="2">
+	<div>
+	<input type="button" name="Submit" value="确 认" onclick="addUser()"/>
+    <input type="button" name="Submit2" value="重 置" onclick="reset();"/>
+    <input type="button" name="Submit3" value="返 回" onclick="backup();"/>
+	</div>
+	</td>
+  </tr>
+</table>
+</html:form>
+</body>
+</html>
+<script language="JavaScript">
+ 	function openwinMedicine()
+    { 
+    	var returnValue=window.showModalDialog("<%=request.getContextPath()%>/medicineManage.do?operate=medicineWindowForCg",window, "dialogWidth:700px,dialogHeight:335px,dialogTop:200px,dialogLeft,200px ");
+ 		if(returnValue && returnValue!="")
+ 		{
+	 	  	var  ret =returnValue.split(',');
+	 	   	window.document.all['customerVipBO.medicineName'].value =ret[0];
+	 	   	//window.document.all['customerVipBO.medicineId'].value=ret[1];
+	 	   	document.getElementById("medicineId").value=ret[1];
+ 		}
+  	}
+  	
+  	
+  	function openwinSuppliers()
+    { 
+    	var returnValue=window.showModalDialog("<%=request.getContextPath()%>/supplier.do?operate=windowlist",window, "dialogWidth:700px,dialogHeight:335px,dialogTop:200px,dialogLeft,200px ");
+ 		if(returnValue && returnValue!="")
+ 		{
+	 	  	var  ret =returnValue.split(',');
+	 	   	window.document.all['customerVipBO.customerName'].value =ret[0];
+	 	   	//window.document.all['customerVipBO.customerId'].value=ret[1];
+	 	   	//window.document.all['customerVipBO.customerAccount'].value=ret[2];
+	 	   	document.getElementById("customerId").value=ret[1];
+	 	   	document.getElementById("customerAccount").value=ret[2];
+ 		}
+  	}
+  	
+  	
+    function addUser()
+    {
+       		 if(checkSubmit(document.customerVipForm)){
+       		 
+       		var ajax = new AJAX();
+			var customerId=document.getElementById("customerId").value;
+			var medicineId=document.getElementById("medicineId").value;
+			//var cgDate=document.getElementById("Y_str_cgDate").value;
+			var url = "<%=request.getContextPath()%>/vip.do?ajax_login=true&operate=checkResult&customerId="+customerId+"&medicineId=" + medicineId;
+			ajax.post(url);
+			var str = ajax.getValue().trim();
+			if(str == "1")
+			{
+				alert("改产品已经关联本期供应商,请重新选择！");
+				return false;
+			}
+			else 
+			{
+				if(confirm("请仔细确认增加此信息吗？"))
+		        {
+		         	document.customerVipForm.action="vip.do?operate=add";
+					customerVipForm.submit();
+		        }
+			
+			}
+       		 
+    		    
+        	}
+	     
+    }
+
+    function backup()
+    {
+    	document.customerVipForm.action="vip.do?operate=list";
+        document.customerVipForm.submit();
+    }
+
+   function reset()
+    {       		
+    	document.customerVipForm.reset();  
+    }
+</script>

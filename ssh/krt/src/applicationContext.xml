@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<!-- 数据源配置 -->
+				<value>classpath:jdbc.properties</value>
+				<!-- 绝对路径配置 <value>file:c:/jdbc.properties</value> -->
+				<!-- 定时器配置 -->
+				<value>classpath:timer.properties</value>
+			</list>
+		</property>
+		<property name="fileEncoding" value="utf-8"/>
+	</bean>
+
+	<!-- cacheManager 配置 -->
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+	  <property name="configLocation">
+		<value>classpath:ehcache.xml</value>
+	  </property>
+	</bean>
+	
+	<!-- gbossCache 配置 -->
+	<bean id="gbossCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+	  <property name="cacheManager">
+		<ref local="cacheManager"/>
+	  </property>
+	  <property name="cacheName">
+		  <value>gbossCache</value>
+	  </property>
+	</bean>
+	
+<!-- 测试级专用库 -->
+<!--   <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">-->
+<!--    <property name="jndiName">-->
+<!--    	<value>jdbc/gboss</value>-->
+<!--    </property>-->
+<!--  </bean>-->
+
+<!-- 生产库，数据移植使用 -->
+ <!--    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    <property name="jndiName">
+    	<value>jdbc/gbossDB</value>
+    </property>
+  </bean>-->
+
+<!-- 开发库-->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driverClass}"></property>
+		<property name="url" value="${jdbc.jdbcUrl}"></property>
+		<property name="username" value="${jdbc.user}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+	</bean>
+
+    <bean id="sqlMapClient" 
+        class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+        <property name="configLocation">
+            <value>classpath:sqlmap-config.xml</value>
+        </property>
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <bean id="transactionManager" 
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <!-- 配置事务特性 -->  
+	<bean id="baseTxService"
+        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+        abstract="true">
+	    <property name="transactionManager" ref="transactionManager"/>
+	    <property name="proxyTargetClass" value="true"/>
+	    <property name="transactionAttributes">
+	      <props>
+	        <prop key="get*">PROPAGATION_REQUIRED</prop>
+	        <prop key="insert*">PROPAGATION_REQUIRED,-BusinessException</prop>
+	        <prop key="save*">PROPAGATION_REQUIRED,-BusinessException</prop>
+	        <prop key="update*">PROPAGATION_REQUIRED,-BusinessException</prop>
+	        <prop key="timerJobTransaction">PROPAGATION_REQUIRED,-ID5Exception</prop>
+	      </props>
+	    </property>
+    </bean>
+	<bean class="org.ssi.dao.impl.BaseDaoImpl" id="baseDao">
+		<property name="sqlMapClient">
+			<ref bean="sqlMapClient" />
+		</property>
+	</bean>
+<!--	<bean parent="baseTxService" id="service">-->
+<!--		<property name="target">-->
+<!--			<bean class="org.ssi.services.impl.ServiceImpl">-->
+<!--				<property name="baseDao">-->
+<!--					<ref bean="baseDao" />-->
+<!--				</property>-->
+<!--			</bean>-->
+<!--		</property>-->
+<!--	</bean>-->
+	
+</beans>

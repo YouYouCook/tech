@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="S_T_USER_US" >
+  <resultMap id="UserUsResult" class="cn.id5.idreal_hr.commons.bo.system.UserUsBO" >
+ 
+    <result column="UU_ID" property="uuId" jdbcType="DECIMAL" />
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="UU_NAME" property="uuName" jdbcType="VARCHAR" />
+    <result column="UU_TYPE" property="uuType" jdbcType="VARCHAR" />
+    <result column="ADD_USER" property="addUser" jdbcType="VARCHAR" />
+    <result column="ADD_TIME" property="addTime" jdbcType="DATE" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="UserUsResult" parameterClass="cn.id5.idreal_hr.commons.bo.system.UserUsBO" >
+    select UU_ID, USER_ID, UU_NAME, UU_TYPE, ADD_USER, ADD_TIME
+    from S_T_USER_US
+    where UU_ID = #uuId# and UU_TYPE = 1
+  </select>
+  <select id="selectAll" resultMap="UserUsResult" parameterClass="java.util.Map" >   
+     SELECT * FROM ( SELECT ROWNUM AS NUMROW, c.* from ( 
+     select UU_ID, USER_ID, UU_NAME, UU_TYPE, ADD_USER, ADD_TIME
+    from S_T_USER_US
+    where UU_TYPE = 1
+     ) c) 
+     <![CDATA[ WHERE NUMROW >= $ibegin$  AND NUMROW < $iend$  ]]>
+  </select>
+  <select id="selectAllOfCount" resultClass="java.lang.String" parameterClass="java.util.Map" > 
+     SELECT count(1) as ID from ( 
+     select UU_ID, USER_ID, UU_NAME, UU_TYPE, ADD_USER, ADD_TIME
+    from S_T_USER_US
+    where UU_TYPE = 1
+     ) 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="cn.id5.idreal_hr.commons.bo.system.UserUsBO" >
+    delete from S_T_USER_US
+    where USER_ID = #userId# and UU_NAME = #uuName# and UU_TYPE = #uuType#
+  </delete>
+  <insert id="insert" parameterClass="cn.id5.idreal_hr.commons.bo.system.UserUsBO" >
+  	<selectKey resultClass="int" keyProperty="uuId" type="pre" > 
+		SELECT SEQ_SYSTEM.NEXTVAL AS ID FROM DUAL 
+	</selectKey>
+    insert into S_T_USER_US (UU_ID, USER_ID, UU_NAME, UU_TYPE, ADD_USER, ADD_TIME)
+    values (#uuId#, #userId#, #uuName#, #uuType#, #addUser#, sysdate)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="cn.id5.idreal_hr.commons.bo.system.UserUsBO" >
+    update S_T_USER_US
+    set USER_ID = #userId#,
+      UU_NAME = #uuName#,
+      UU_TYPE = #uuType#,
+      ADD_USER = #addUser#,
+      ADD_TIME = #addTime#
+    where UU_ID = #uuId#
+  </update>
+</sqlMap>

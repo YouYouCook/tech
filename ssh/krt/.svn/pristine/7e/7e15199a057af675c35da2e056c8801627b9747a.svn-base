@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE struts-config PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+    "dtd/struts-config_1_2.dtd">
+
+<struts-config>
+ <form-beans>
+ 		<!-- ************系统管理所有FORM-BEANS配置 ************ -->
+	    <form-bean name="medicineForm" type="cn.krt.zbcg.system.web.form.MedicineForm" />
+	    <form-bean name="userForm" type="cn.krt.zbcg.system.web.form.UserForm" />
+	    <form-bean name="customerForm" type="cn.krt.zbcg.system.web.form.CustomerForm" />
+	    <form-bean name="customerVipForm" type="cn.krt.zbcg.system.web.form.CustomerVipForm" />
+		<form-bean name="medicineCgForm" type="cn.krt.zbcg.system.web.form.MedicineCgForm" />
+		<form-bean name="medicineJbForm" type="cn.krt.zbcg.system.web.form.MedicineJbForm" />
+		<form-bean name="medicineZbForm" type="cn.krt.zbcg.system.web.form.MedicineZbForm" />
+		<form-bean name="noticeForm" type="cn.krt.zbcg.system.web.form.NoticeForm" />
+		<form-bean name="storageForm" type="cn.krt.zbcg.system.web.form.StorageForm" />
+		<form-bean name="shqdForm" type="cn.krt.zbcg.system.web.form.ShqdForm" />
+		<form-bean name="fapiaoForm" type="cn.krt.zbcg.system.web.form.FapiaoForm" />
+		<form-bean name="fukuanForm" type="cn.krt.zbcg.system.web.form.FukuanForm" />
+		<form-bean name="zhaobiaojinduForm" type="cn.krt.zbcg.system.web.form.ZhaobiaojinduForm" />
+ </form-beans>
+ 
+  <action-mappings>
+  		<!-- ************   分页用到ACTION   **************** -->
+  		 <action path="/image"
+        	type="org.ssi.struts.action.ImageAction"
+	        parameter="operate"
+			validate="false">
+	    </action>
+	    
+	   <action path="/zhaobiaojinduManage"
+	        type="cn.krt.zbcg.system.web.action.ZhaobiaojinduAction" 
+	        name="zhaobiaojinduForm" 
+	        scope="request" 
+	        parameter="operate"
+	        validate="false">
+			<forward name="zhaobiaoList" path="/WEB-INF/page/system/yuanliaoManage.jsp" />
+			<forward name="zhibaolist" path="/WEB-INF/page/system/zhibaojinManage.jsp" />
+			<forward name="toAdd" path="/WEB-INF/page/system/yuanliaoAdd.jsp" />
+			<forward name="toUpdate" path="/WEB-INF/page/system/yuanliaoModify.jsp" />
+			<forward name="toUpdateZBJ" path="/WEB-INF/page/system/zhibaojinModify.jsp" />
+		</action>
+	     
+	    
+	  <action path="/fukuanManage"
+	        type="cn.krt.zbcg.system.web.action.FukuanAction" 
+	        name="fukuanForm" 
+	        scope="request" 
+	        parameter="operate"
+	        validate="false">
+			<forward name="fukuanList" path="/WEB-INF/page/system/fukuanManage.jsp" />
+			<forward name="toAdd" path="/WEB-INF/page/system/fukuanAdd.jsp" />
+			<forward name="toUpdate" path="/WEB-INF/page/system/fukuanModify.jsp" />
+		</action>
+	    
+	    
+	  <action path="/fapiaoManage"
+	        type="cn.krt.zbcg.system.web.action.FaPiaoAction" 
+	        name="fapiaoForm" 
+	        scope="request" 
+	        parameter="operate"
+	        validate="false">
+			<forward name="fapiaoList" path="/WEB-INF/page/system/fapiaoManage.jsp" />
+			<forward name="fapiaoWindowList" path="/WEB-INF/page/system/fapiaowindowlist.jsp" />
+			<forward name="toAdd" path="/WEB-INF/page/system/fapiaoAdd.jsp" />
+			<forward name="toUpdate" path="/WEB-INF/page/system/fapiaoModify.jsp" />
+		</action>
+	    
+	    <action path="/shqdManage"
+	        type="cn.krt.zbcg.system.web.action.ShqdAction" 
+	        name="shqdForm" 
+	        scope="request" 
+	        parameter="operate"
+	        validate="false">
+			<forward name="shqdlist" path="/WEB-INF/page/system/shqdManage.jsp" />
+			<forward name="toAdd" path="/WEB-INF/page/system/shqdAdd.jsp" />
+			<forward name="toUpdate" path="/WEB-INF/page/system/shqdModify.jsp" />
+		</action>
+	    
+	    
+	    <action path="/storageManage"
+	        type="cn.krt.zbcg.system.web.action.StorageAction" 
+	        name="storageForm" 
+	        scope="request" 
+	        parameter="operate"
+	        validate="false">
+			<forward name="storageList" path="/WEB-INF/page/system/storageManage.jsp" />
+			<forward name="zlstorageList" path="/WEB-INF/page/system/zlStorageManage.jsp" />
+			<forward name="shqd2storage" path="/WEB-INF/page/system/shqd2storagemanage.jsp" />
+			<forward name="shqdtoUpdate" path="/WEB-INF/page/system/shqd2storageadd.jsp" />
+			<forward name="daiyan" path="/WEB-INF/page/system/daiyanmanage.jsp" />
+			<forward name="buhege" path="/WEB-INF/page/system/daiyanmanage.jsp" />
+			<forward name="toUpdate" path="/WEB-INF/page/system/storageModify.jsp" />
+			<forward name="zltoUpdate" path="/WEB-INF/page/system/zlStorageModify.jsp" />
+			<forward name="toAdd" path="/WEB-INF/page/system/storageAdd.jsp" />
+		</action>
+		
+	    <!-- ************   招标公告维护ACTION   **************** -->
+  		<action path="/notice"
+	        type="cn.krt.zbcg.system.web.action.NoticeAction" 
+	        name="noticeForm" 
+	        scope="request" 
+	        parameter="operate"
+	        validate="false">
+			<forward name="list" path="/WEB-INF/page/system/notice.jsp" />
+			<forward name="toAdd" path="/WEB-INF/page/system/medicineAdd.jsp" />
+			<forward name="toUpdate" path="/WEB-INF/page/system/medicineModify.jsp" />
+			<forward name="medicineWindowList" path="/WEB-INF/page/system/medicineWindow.jsp" />
+		</action>
+		<!-- ************   品种维护ACTION   **************** -->
+  		<action path="/medicineManage"
+	        type="cn.krt.zbcg.system.web.action.MedicineAction" 
+	        name="medicineForm" 
+	        scope="request" 
+	        parameter="operate"
+	        validate="false">
+			<forward name="medicineList" path="/WEB-INF/page/system/medicineManage.jsp" />
+			<forward name="toAdd" path="/WEB-INF/page/system/medicineAdd.jsp" />
+			<forward name="toUpdate" path="/WEB-INF/page/system/medicineModify.jsp" />
+			<forward name="medicineWindowList" path="/WEB-INF/page/system/medicineWindow.jsp" />
+			<forward name="medicineWindowForCg" path="/WEB-INF/page/system/medicineWindowForCg.jsp" />
+		</action>
+		
+		<!-- ************   采购品种录入   **************** -->
+		<action path="/MedicineCgAction"
+	        type="cn.krt.zbcg.system.web.action.MedicineCgAction" 
+	        name="medicineCgForm" 
+	        scope="request" 
+	        parameter="operate"
+	        validate="false">
+			<forward name="listCG" path="/WEB-INF/page/system/medicineCG.jsp" />
+			<forward name="tolist" path="/krt/MedicineCgAction.do?operate=list" />
+			<forward name="toUpdate" path="/WEB-INF/page/system/medicineCGModify.jsp" />
+			<forward name="topList" path="/WEB-INF/page/system/topList.jsp" />
+		</action>
+		
+		<!-- ************  供货商竞标录入   **************** -->
+		<action path="/MedicineJbAction"
+	        type="cn.krt.zbcg.system.web.action.MedicineJbAction" 
+	        name="medicineJbForm" 
+	        scope="request" 
+	        parameter="operate"
+	        validate="false">
+			<forward name="list" path="/WEB-INF/page/system/medicineJbList.jsp" />
+			<forward name="toUpdate" path="/WEB-INF/page/system/medicineCGModify.jsp" />
+			<forward name="tqjb" path="/WEB-INF/page/system/tqjb.jsp" />
+		</action>
+		<!-- ************  VIP供应商管理   **************** -->
+		<action path="/vip"
+	        type="cn.krt.zbcg.system.web.action.CustomerVipAction" 
+	        name="customerVipForm" 
+	        scope="request" 
+	        parameter="operate"
+	        validate="false">
+			<forward name="list" path="/WEB-INF/page/system/vipSuppliers.jsp" />
+			<forward name="toAdd" path="/WEB-INF/page/system/vipSuppliersAdd.jsp" />
+		</action>
+		<!-- ************  招标   **************** -->
+		<action path="/MedicineZbAction"
+	        type="cn.krt.zbcg.system.web.action.MedicineZbAction" 
+	        name="medicineZbForm" 
+	        scope="request" 
+	        parameter="operate"
+	        validate="false">
+			<forward name="zbList" path="/WEB-INF/page/system/medicineZbList.jsp" />
+			<forward name="reslutList" path="/WEB-INF/page/system/userMakeZbResult.jsp" />
+			<forward name="resultForCg" path="/WEB-INF/page/system/resultForCg.jsp" />
+			<forward name="resultForSuppliers" path="/WEB-INF/page/system/resultForSuppliers.jsp" />
+			<forward name="toContract" path="/WEB-INF/page/system/contract.jsp" />
+			<forward name="resultForCgWindow" path="/WEB-INF/page/system/resultForCgwindow.jsp" />
+		</action>
+		
+		<!-- ************   用户管理ACTION   **************** -->
+		<action path="/user" 
+	        type="cn.krt.zbcg.system.web.action.UserAction" 
+	        name="userForm" 
+	        scope="request" 
+	        parameter="operate"
+	        validate="false">
+			<forward name="list" path="/WEB-INF/page/system/userManage.jsp" />
+			<forward name="toAdd" path="/WEB-INF/page/system/userAdd.jsp" />
+			<forward name="toUpdate" path="/WEB-INF/page/system/userModify.jsp" />
+			<!-- 登陆的时候用到的 -->
+			<forward name="indexsuccess" path="/main.html" />
+			<forward name="destroySession" path="/index.jsp" />
+			<!-- ************   登陆用户修改密码，用户信息   **************** -->
+			<forward name="userPassword" path="/WEB-INF/page/system/userPasswordModify.jsp" />
+			<forward name="supplierPassword" path="/WEB-INF/page/system/supplierPasswordModify.jsp" />
+			<forward name="passwordSuccess" path="/index.jsp" />
+		</action>
+		<!-- ************   供应商管理ACTION   **************** -->
+		<action path="/supplier" 
+	        type="cn.krt.zbcg.system.web.action.CustomerAction" 
+	        name="customerForm" 
+	        scope="request" 
+	        parameter="operate"
+	        validate="false">
+	        <forward name="oodlist" path="/WEB-INF/page/system/suppliersManage.jsp" />
+			<forward name="list" path="/WEB-INF/page/system/suppliersManage.jsp" />
+			<forward name="toAdd" path="/WEB-INF/page/system/suppliersAdd.jsp" />
+			<forward name="toUpdate" path="/WEB-INF/page/system/suppliersModify.jsp" />
+			<forward name="windowlist" path="/WEB-INF/page/system/suppliersWindow.jsp" />
+		</action>
+		
+  </action-mappings>
+  <message-resources   parameter= "application "   /> 
+</struts-config>

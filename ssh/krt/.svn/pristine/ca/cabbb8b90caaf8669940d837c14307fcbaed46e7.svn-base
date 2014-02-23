@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="GBOSS_S_T_EMPLOYEES" >
+
+	<typeAlias alias="user" type="cn.id5.idreal_hr.commons.bo.system.EmployeesBO"/>
+	
+  	<resultMap id="EmployeesResult" class="user" >
+    <result column="EMP_ID" property="empId" jdbcType="long" />
+    <result column="DEPT_ID" property="deptId" jdbcType="long" nullValue="0"/>
+    <result column="EMP_ACCOUNT" property="empAccount" jdbcType="VARCHAR" />
+    <result column="EMP_PASSWORD" property="empPassword" jdbcType="VARCHAR" />
+    <result column="EMP_NAME" property="empName" jdbcType="VARCHAR" />
+    <result column="EMP_SEX" property="empSex" jdbcType="CHAR" />
+    <result column="EMP_GH" property="empGh" jdbcType="VARCHAR" />
+    <result column="EMP_DH" property="empDh" jdbcType="VARCHAR" />
+    <result column="EMP_EMAIL" property="empEmail" jdbcType="VARCHAR" />
+    <result column="EMP_MOBILE" property="empMobile" jdbcType="VARCHAR" />
+    <result column="EMP_STATE" property="empState" jdbcType="VARCHAR" nullValue="0"/>
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="DEPT_NAME" property="deptName" jdbcType="VARCHAR" />
+  </resultMap> 
+    
+    <resultMap id="result" class="user" extends="EmployeesResult">
+        <result property="roles" column="EMP_ID" select="GBOSS_S_T_ROLE.getRoleByEmId"/>
+        <result property="customers" column="EMP_ID" select="C_T_SET_CUSTOMER.getCustomerByEmId"/>
+  	</resultMap>
+	  
+   	<select id="getEmByRoleId" parameterClass="long" resultMap="result">
+        select u.* from S_T_EMPLOYEES u where u.EMP_ID in
+        (select EMP_ID from S_T_EMP_ROLE where ROLE_ID=#value#)  order by EMP_ID DESC
+  	</select> 
+  	
+  	<select id="getEmByCustomerId" parameterClass="long" resultMap="result">
+        select u.* from S_T_EMPLOYEES u where u.EMP_ID in
+        (select EMPID from S_T_EMP_CUSTOMER where CUSTOMERID=#value#) order by EMP_ID DESC
+  	</select>
+  <!-- 
+	     功能说明：用户信息分页查询 iBATIS Sql分页
+	     作者：    WangYunLong  
+	     日期：    2010-03-04
+	-->
+  <select id="selectAll" resultMap="EmployeesResult" parameterClass="java.util.Map"> 	
+   	SELECT
+   			* 
+   	FROM 
+   			( SELECT ROWNUM AS NUMROW, c.* from ( select 
+   			EMP_ID, 
+   			S_T_DEPT.DEPT_ID,
+   			S_T_DEPT.DEPT_NAME,
+   			EMP_ACCOUNT,
+   			EMP_PASSWORD,
+   			EMP_NAME,
+   			EMP_SEX,
+   			EMP_GH,
+   			EMP_DH,
+   			EMP_EMAIL,
+   			EMP_MOBILE,
+   			EMP_STATE,
+   			REMARK
+   			
+    FROM 
+    		 S_T_EMPLOYEES INNER JOIN S_T_DEPT  ON S_T_EMPLOYEES.DEPT_ID=S_T_DEPT.DEPT_ID WHERE 1=1 
+			
+			<isNotNull property="empAccount">
+				<isNotEmpty  property="empAccount">
+				and EMP_ACCOUNT like '%$empAccount$%'
+				</isNotEmpty>
+			</isNotNull>
+			<isNotNull property="empName">
+				<isNotEmpty  property="empName">
+				and EMP_NAME like '%$empName$%'
+				</isNotEmpty>
+			</isNotNull>
+			<isNotNull property="deptName">
+				<isNotEmpty  property="deptName">
+				and S_T_DEPT.DEPT_NAME like '%$deptName$%'
+				</isNotEmpty>
+			</isNotNull>
+		ORDER BY EMP_ID DESC
+   			 ) c) 
+   			 
+   			<![CDATA[ 
+   WHERE 
+    		NUMROW >= $ibegin$  AND NUMROW < $iend$	 
+   			]]>   	
+  </select>
+  
+  <!-- 
+	     功能说明：设定用户权限信息分页查询 iBATIS Sql分页
+	     作者：    WangYunLong  
+	     日期：    2010-05-15
+	-->
+  <select id="selectEmpRes" resultMap="EmployeesResult" parameterClass="java.util.Map"> 	
+   	SELECT
+   			* 
+   	FROM 
+   			( SELECT ROWNUM AS NUMROW, c.* from ( select 
+   			EMP_ID, 
+   			S_T_DEPT.DEPT_ID,
+   			S_T_DEPT.DEPT_NAME,
+   			EMP_ACCOUNT,
+   			EMP_PASSWORD,
+   			EMP_NAME,
+   			EMP_SEX,
+   			EMP_GH,
+   			EMP_DH,
+   			EMP_EMAIL,
+   			EMP_MOBILE,
+   			EMP_STATE,
+   			REMARK
+   			
+    FROM 
+    		 S_T_EMPLOYEES INNER JOIN S_T_DEPT  ON S_T_EMPLOYEES.DEPT_ID=S_T_DEPT.DEPT_ID WHERE 1=1 
+			
+			<isNotNull property="empAccount">
+				<isNotEmpty  property="empAccount">
+				and EMP_ACCOUNT like '%$empAccount$%'
+				</isNotEmpty>
+			</isNotNull>
+			<isNotNull property="empName">
+				<isNotEmpty  property="empName">
+				and EMP_NAME like '%$empName$%'
+				</isNotEmpty>
+			</isNotNull>
+			<isNotNull property="deptName">
+				<isNotEmpty  property="deptName">
+				and S_T_DEPT.DEPT_NAME like '%$deptName$%'
+				</isNotEmpty>
+			</isNotNull>
+			
+			and  S_T_EMPLOYEES.EMP_ACCOUNT NOT IN(SELECT UU_NAME FROM S_T_USER_US  where USER_ID =#userId#)
+		
+			ORDER BY EMP_ID DESC
+   			 ) c) 
+   			 
+   			<![CDATA[ 
+   WHERE 
+    		NUMROW >= $ibegin$  AND NUMROW < $iend$	 
+   			]]>   	
+  </select>
+   <!-- 
+	     功能说明：用户信息分页记录 iBATIS Sql分页
+	     作者：    WangYunLong  
+	     日期：    2010-03-04
+	-->
+  <select id="selectEmpResOfCount" resultClass="java.lang.String" parameterClass="java.util.Map">
+     SELECT 
+     		count(1) as ID 
+     FROM 
+     		S_T_EMPLOYEES INNER JOIN S_T_DEPT  ON S_T_EMPLOYEES.DEPT_ID=S_T_DEPT.DEPT_ID 
+     WHERE 
+     		1=1 
+			<isNotNull property="empAccount">
+				<isNotEmpty  property="empAccount">
+				and EMP_ACCOUNT like '%$empAccount$%'
+				</isNotEmpty>
+			</isNotNull>
+			<isNotNull property="empName">
+				<isNotEmpty  property="empName">
+				and EMP_NAME like '%$empName$%'
+				</isNotEmpty>
+			</isNotNull>			
+			<isNotNull property="deptName">
+				<isNotEmpty  property="deptName">
+				and DEPT_NAME like '%$deptName$%'
+				</isNotEmpty>
+			</isNotNull> 
+			and  S_T_EMPLOYEES.EMP_ACCOUNT NOT IN(SELECT UU_NAME FROM S_T_USER_US  where USER_ID =#userId#)
+  </select>
+  <!-- 
+	     功能说明：用户信息分页记录 iBATIS Sql分页
+	     作者：    WangYunLong  
+	     日期：    2010-03-04
+	-->
+  <select id="selectAllOfCount" resultClass="java.lang.String" parameterClass="java.util.Map">
+     SELECT 
+     		count(1) as ID 
+     FROM 
+     		S_T_EMPLOYEES INNER JOIN S_T_DEPT  ON S_T_EMPLOYEES.DEPT_ID=S_T_DEPT.DEPT_ID 
+     WHERE 
+     		1=1 
+			<isNotNull property="empAccount">
+				<isNotEmpty  property="empAccount">
+				and EMP_ACCOUNT like '%$empAccount$%'
+				</isNotEmpty>
+			</isNotNull>
+			<isNotNull property="empName">
+				<isNotEmpty  property="empName">
+				and EMP_NAME like '%$empName$%'
+				</isNotEmpty>
+			</isNotNull>			
+			<isNotNull property="deptName">
+				<isNotEmpty  property="deptName">
+				and DEPT_NAME like '%$deptName$%'
+				</isNotEmpty>
+			</isNotNull>
+  </select>
+    <!-- 
+	     功能说明：添加用户信息
+	     作者：    WangYunLong  
+	     日期：    2010-03-04
+	-->
+  <insert id="insert" parameterClass="cn.id5.idreal_hr.commons.bo.system.EmployeesBO" >
+  
+  <selectKey resultClass="int" keyProperty="empId" type="pre" > 
+		SELECT SEQ_SYSTEM.NEXTVAL AS ID FROM DUAL 
+	  </selectKey>
+	
+    INSERT INTO	
+    			 S_T_EMPLOYEES (
+    			 EMP_ID, 
+   				 DEPT_ID, 
+   				 EMP_ACCOUNT,
+	   			 EMP_PASSWORD,
+	   			 EMP_NAME,
+	   			 EMP_SEX,
+	   			 EMP_GH,
+	   			 EMP_DH,
+	   			 EMP_EMAIL,
+	   			 EMP_MOBILE,
+	   			 EMP_STATE,
+	   			 REMARK
+    			 )
+    VALUES 
+    			(
+    			#empId#, 
+    			#deptId#, 
+    			#empAccount#,
+    			#empPassword#, 
+    			#empName#, 
+    			#empSex#,
+    			#empGh#, 
+    			#empDh#, 
+    			#empEmail#,
+    			#empMobile#, 
+    			#empState#, 
+    			#remark#
+    			)
+  </insert>
+  
+  <select id="selectByPrimaryKey" resultClass="cn.id5.idreal_hr.commons.bo.system.EmployeesBO" parameterClass="cn.id5.idreal_hr.commons.bo.system.EmployeesBO" >
+    SELECT 
+    			 EMP_ID as empId, 
+   				 DEPT_ID as deptId, 
+   				 EMP_ACCOUNT	as empAccount,
+	   			 EMP_PASSWORD as empPassword,
+	   			 EMP_NAME as empName,
+	   			 EMP_SEX as empSex,
+	   			 EMP_GH	as empGh,
+	   			 EMP_DH as empDh,
+	   			 EMP_EMAIL as empEmail,
+	   			 EMP_MOBILE as empMobile,
+	   			 EMP_STATE as empState,
+	   			 REMARK
+    FROM 
+    			 S_T_EMPLOYEES
+    WHERE  
+    		EMP_ID = #empId#
+  </select>
+  
+   <update id="update" parameterClass="cn.id5.idreal_hr.commons.bo.system.EmployeesBO" >
+    update S_T_EMPLOYEES
+    set 
+    			 EMP_ID = #empId#,
+    			 DEPT_ID=#deptId#,
+   				 EMP_ACCOUNT=#empAccount#,
+   				 EMP_NAME=#empName#,
+	   			 EMP_SEX=#empSex#,
+	   			 EMP_GH=#empGh#, 
+	   			 EMP_DH=#empDh#,
+	   			 EMP_EMAIL=#empEmail#,
+	   			 EMP_MOBILE=#empMobile#,
+	   			 EMP_STATE=#empState#,
+	   			 REMARK=#remark# 
+      
+    where 		EMP_ID = #empId#
+  </update>
+  <update id="updateStatus" parameterClass="java.util.Map">
+		update S_T_EMPLOYEES set EMP_STATE=#disabled# where EMP_ID = #empId#
+	</update>
+	
+	<select id="getEmpById" parameterClass="java.util.Map" remapResults="true" resultMap="result">
+		select 
+		    EMP_ID, 
+   			S_T_DEPT.DEPT_ID,
+   			DEPT_NAME,
+   			EMP_ACCOUNT,
+   			EMP_PASSWORD,
+   			EMP_NAME,
+   			EMP_SEX,
+   			EMP_GH,
+   			EMP_DH,
+   			EMP_EMAIL,
+   			EMP_MOBILE,
+   			EMP_STATE,
+   			REMARK
+	   	from 
+	   			 S_T_EMPLOYEES INNER JOIN S_T_DEPT  ON S_T_EMPLOYEES.DEPT_ID=S_T_DEPT.DEPT_ID
+	   	where 
+	   			 EMP_ID=#empId# 
+	</select>
+	
+	<select id="getUserByName" resultClass="cn.id5.idreal_hr.commons.bo.system.EmployeesBO" parameterClass="cn.id5.idreal_hr.commons.bo.system.EmployeesBO" >
+    SELECT 
+    			 EMP_ID as empId, 
+   				 DEPT_ID as deptId, 
+   				 EMP_ACCOUNT	as empAccount,
+	   			 EMP_PASSWORD as empPassword,
+	   			 EMP_NAME as empName,
+	   			 EMP_SEX as empSex,
+	   			 EMP_GH	as empGh,
+	   			 EMP_DH as empDh,
+	   			 EMP_EMAIL as empEmail,
+	   			 EMP_MOBILE as empMobile,
+	   			 EMP_STATE as empState,
+	   			 REMARK
+    FROM 
+    			 S_T_EMPLOYEES
+    WHERE  
+    		EMP_ACCOUNT = #empAccount#
+  </select>
+  <select id="getPasswordByCheck" resultClass="cn.id5.idreal_hr.commons.bo.system.EmployeesBO" parameterClass="cn.id5.idreal_hr.commons.bo.system.EmployeesBO" >
+    SELECT 
+    			 EMP_ID as empId, 
+   				 DEPT_ID as deptId, 
+   				 EMP_ACCOUNT	as empAccount,
+	   			 EMP_PASSWORD as empPassword,
+	   			 EMP_NAME as empName,
+	   			 EMP_SEX as empSex,
+	   			 EMP_GH	as empGh,
+	   			 EMP_DH as empDh,
+	   			 EMP_EMAIL as empEmail,
+	   			 EMP_MOBILE as empMobile,
+	   			 EMP_STATE as empState,
+	   			 REMARK
+    FROM 
+    			 S_T_EMPLOYEES
+    WHERE  
+    		EMP_ACCOUNT = '$empAccount$' and EMP_PASSWORD = '$empPassword$'
+  </select>
+  <select id="getUserByGh"  resultClass="cn.id5.idreal_hr.commons.bo.system.EmployeesBO" parameterClass="cn.id5.idreal_hr.commons.bo.system.EmployeesBO" >
+    SELECT 
+    			 EMP_ID as empId, 
+   				 DEPT_ID as deptId, 
+   				 EMP_ACCOUNT	as empAccount,
+	   			 EMP_PASSWORD as empPassword,
+	   			 EMP_NAME as empName,
+	   			 EMP_SEX as empSex,
+	   			 EMP_GH	as empGh,
+	   			 EMP_DH as empDh,
+	   			 EMP_EMAIL as empEmail,
+	   			 EMP_MOBILE as empMobile,
+	   			 EMP_STATE as empState,
+	   			 REMARK
+    FROM 
+    			 S_T_EMPLOYEES
+    WHERE  
+    		EMP_GH = '$empGh$'
+  </select>
+     <update id="updatePassword" parameterClass="cn.id5.idreal_hr.commons.bo.system.EmployeesBO" >
+    update 
+    			S_T_EMPLOYEES
+    	set 
+    			 EMP_PASSWORD = #empPassword#
+      
+    where 		EMP_ACCOUNT = '$empAccount$'
+  </update>
+  <!-- 产品配置模块用 -->
+  <select id="getEmployeesBOByProductFzr" resultMap="EmployeesResult" resultClass="cn.id5.idreal_hr.commons.bo.system.EmployeesBO" parameterClass="String" fetchSize="50">
+    SELECT 
+    			 EMP_ID, 
+   				 DEPT_ID, 
+   				 EMP_ACCOUNT,
+	   			 EMP_PASSWORD,
+	   			 EMP_NAME,
+	   			 EMP_SEX,
+	   			 EMP_GH,
+	   			 EMP_DH,
+	   			 EMP_EMAIL,
+	   			 EMP_MOBILE,
+	   			 EMP_STATE,
+	   			 REMARK,
+	   			 0 dept_Name
+    FROM 
+    			 S_T_EMPLOYEES
+    WHERE  
+    		EMP_ACCOUNT=#value#
+  </select>
+  
+  <select id="selectAllByState" resultMap="EmployeesResult" parameterClass="java.util.Map"> 	
+   	SELECT
+   			* 
+   	FROM 
+   			( SELECT ROWNUM AS NUMROW, c.* from ( select 
+   			EMP_ID, 
+   			S_T_DEPT.DEPT_ID,
+   			DEPT_NAME,
+   			EMP_ACCOUNT,
+   			EMP_PASSWORD,
+   			EMP_NAME,
+   			EMP_SEX,
+   			EMP_GH,
+   			EMP_DH,
+   			EMP_EMAIL,
+   			EMP_MOBILE,
+   			EMP_STATE,
+   			REMARK
+   			
+    FROM 
+    		 S_T_EMPLOYEES INNER JOIN S_T_DEPT  ON S_T_EMPLOYEES.DEPT_ID=S_T_DEPT.DEPT_ID WHERE 1=1 
+			
+			<isNotNull property="empAccount">
+				<isNotEmpty  property="empAccount">
+				and EMP_ACCOUNT like '%$empAccount$%'
+				</isNotEmpty>
+			</isNotNull>
+			<isNotNull property="empName">
+				<isNotEmpty  property="empName">
+				and EMP_NAME like '%$empName$%'
+				</isNotEmpty>
+			</isNotNull>
+				and EMP_STATE = 1 ORDER BY EMP_ID DESC
+   			 ) c) 
+   			 
+   			<![CDATA[ 
+   WHERE 
+    		NUMROW >= $ibegin$  AND NUMROW < $iend$	 
+   			]]>   	
+  </select>
+  
+  <!-- 消息支撑用 -->
+  <select id="getEmByRoleIdMsg" parameterClass="long" resultMap="EmployeesResult">
+        select 	EMP_ID, 
+   			STD.DEPT_ID,
+   			DEPT_NAME,
+   			EMP_ACCOUNT,
+   			EMP_PASSWORD,
+   			EMP_NAME,
+   			EMP_SEX,
+   			EMP_GH,
+   			EMP_DH,
+   			EMP_EMAIL,
+   			EMP_MOBILE,
+   			EMP_STATE,
+   			REMARK
+        from 	
+        		S_T_EMPLOYEES u , S_T_DEPT STD
+        where u.EMP_STATE='1' and
+        	u.EMP_ID in(select EMP_ID from S_T_EMP_ROLE where ROLE_ID=#value#) AND STD.DEPT_ID=U.DEPT_ID order by EMP_ID DESC
+  	</select> 
+  	<!-- 根据合同中客户编号获得负责该合同的国政通员工 gaobo -->
+  	<select id="getEmpByCustomerIdMsg" resultMap="EmployeesResult" resultClass="cn.id5.idreal_hr.commons.bo.system.EmployeesBO" parameterClass="java.lang.String">
+  	    select 
+  	        EMP_ID, 
+   			STD.DEPT_ID,
+   			DEPT_NAME,
+   			EMP_ACCOUNT,
+   			EMP_PASSWORD,
+   			EMP_NAME,
+   			EMP_SEX,
+   			EMP_GH,
+   			EMP_DH,
+   			EMP_EMAIL,
+   			EMP_MOBILE,
+   			EMP_STATE,
+   			REMARK
+  	    from S_T_EMPLOYEES u , S_T_DEPT STD
+        where STD.DEPT_ID=U.DEPT_ID AND u.EMP_STATE='1'  AND u.EMP_ACCOUNT in
+                   (select CUSTOMER_SAIL from C_T_CUSTOMER ct ,G_T_CONTRACT gtc 
+                    where ct.CUSTOMER_CODE = gtc.CUSTOMER_CODE AND ct.RECORD_STATE='1' and ct.RECORD_TYPE='0' AND gtc.CUSTOMER_CODE = #customerCode#)
+  	</select>
+  	
+  	<!-- 根据客户订过的产品表中客户ID获得负责该产品的国政通员工 gaobo -->
+  	<select id="getEmpInfMsg" resultMap="EmployeesResult" resultClass="cn.id5.idreal_hr.commons.bo.system.EmployeesBO" parameterClass="long">
+  	    select 
+  	        EMP_ID, 
+   			STD.DEPT_ID,
+   			DEPT_NAME,
+   			EMP_ACCOUNT,
+   			EMP_PASSWORD,
+   			EMP_NAME,
+   			EMP_SEX,
+   			EMP_GH,
+   			EMP_DH,
+   			EMP_EMAIL,
+   			EMP_MOBILE,
+   			EMP_STATE,
+   			REMARK
+  	    from S_T_EMPLOYEES u , S_T_DEPT STD
+        where STD.DEPT_ID=U.DEPT_ID AND u.EMP_ACCOUNT in
+                   (select CUSTOMER_SAIL from C_T_CUSTOMER ct where ct.CUSTOMER_ID = #customerId#)
+  	</select>
+  	
+  	<!-- 根据员工账号获取其信息 -->
+  	<select id="getUserByEmpCode" resultClass="cn.id5.idreal_hr.commons.bo.system.EmployeesBO" parameterClass="java.lang.String">
+	    SELECT 
+	    			 EMP_ID as empId, 
+	   				 DEPT_ID as deptId, 
+	   				 EMP_ACCOUNT	as empAccount,
+		   			 EMP_PASSWORD as empPassword,
+		   			 EMP_NAME as empName,
+		   			 EMP_SEX as empSex,
+		   			 EMP_GH	as empGh,
+		   			 EMP_DH as empDh,
+		   			 EMP_EMAIL as empEmail,
+		   			 EMP_MOBILE as empMobile,
+		   			 EMP_STATE as empState,
+		   			 REMARK
+	    FROM 
+	    			 S_T_EMPLOYEES
+	    WHERE  
+	    		EMP_ACCOUNT = #value#
+  </select>
+</sqlMap>

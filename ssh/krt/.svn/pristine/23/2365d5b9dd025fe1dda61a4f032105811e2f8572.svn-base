@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE abatorConfiguration PUBLIC "-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN" "http://ibatis.apache.org/dtd/abator-config_1_0.dtd" >
+<abatorConfiguration >
+
+  <abatorContext>
+
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/cgzb" userId="root" password="" >
+      <classPathEntry location="D:\mysql-connector-java-5.1.6-bin.jar" />
+    </jdbcConnection>
+      
+    <javaModelGenerator targetPackage="cn.krt.zbcg.commons.bo.system" targetProject="krt" />
+    
+    <sqlMapGenerator targetPackage="cn.krt.zbcg.commons.sqlmap.system" targetProject="krt" />
+     <daoGenerator targetPackage="cn.krt.zbcg.system.dao" targetProject="krt" type="gboss">
+    	<property name="rootInterface" value="org.ssi.dao.IBaseDao" />
+    </daoGenerator>
+    <servicesGenerator targetPackage="cn.krt.zbcg.system.services" targetProject="krt">
+    	<property name="rootServicesInterface" value="org.ssi.services.IService" />
+    </servicesGenerator>
+    
+    <formGenerator targetPackage="cn.krt.zbcg.system.web.form" targetProject="krt">
+    	<property name="rootFormClass" value="org.ssi.struts.actionform.BaseForm" />
+    </formGenerator>
+    
+    <actionGenerator targetPackage="cn.krt.zbcg.system.web.action" targetProject="krt">
+    	<property name="rootActionClass" value="org.ssi.struts.action.SSIDispatchAction" />
+    </actionGenerator>
+    <table schema="cgzb" tableName="notice" ></table>
+  </abatorContext>
+</abatorConfiguration>

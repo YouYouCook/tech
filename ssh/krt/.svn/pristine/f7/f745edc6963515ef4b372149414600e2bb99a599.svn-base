@@ -1,0 +1,111 @@
+/*     */ package cn.krt.zbcg.commons.bo.system;
+
+import java.io.File;
+
+import org.apache.struts.upload.FormFile;
+
+/*     */ 
+/*     */ public class MedicineBO
+/*     */ {
+/*     */   private Integer medicineId;
+/*     */   private String medicineName;
+			private FormFile medicineImage;// 实际上传文件
+			private String leibie;
+			private String wlbm;
+			
+			public String getLeibie() {
+				return leibie;
+			}
+			public void setLeibie(String leibie) {
+				this.leibie = leibie;
+			}
+			public String getWlbm() {
+				return wlbm;
+			}
+			public void setWlbm(String wlbm) {
+				this.wlbm = wlbm;
+			}
+			public FormFile getMedicineImage() {
+				return medicineImage;
+			}
+			public void setMedicineImage(FormFile medicineImage) {
+				this.medicineImage = medicineImage;
+			}
+			public String getMedicineimageContentType() {
+				return medicineimageContentType;
+			}
+			public void setMedicineimageContentType(String medicineimageContentType) {
+				this.medicineimageContentType = medicineimageContentType;
+			}
+	
+	
+
+			private String medicineVistorimagePath ;
+
+			public String getMedicineVistorimagePath() {
+				return medicineVistorimagePath;
+			}
+			public void setMedicineVistorimagePath(String medicineVistorimagePath) {
+				this.medicineVistorimagePath = medicineVistorimagePath;
+			}
+			public String getMedicineimagefilename() {
+				return medicineimagefilename;
+			}
+			public void setMedicineimagefilename(String medicineimagefilename) {
+				this.medicineimagefilename = medicineimagefilename;
+			}
+
+
+
+
+
+			private String medicineimageContentType; // 文件的内容类型
+			private String medicineimagefilename; // 上传文件名
+	
+/*     */   private String zlyq;
+/*     */   private String remark;
+/*     */ 
+/*     */   public String getRemark()
+/*     */   {
+/*  33 */     return this.remark;
+/*     */   }
+/*     */ 
+/*     */   public void setRemark(String remark) {
+/*  37 */     this.remark = remark;
+/*     */   }
+/*     */ 
+/*     */   public Integer getMedicineId()
+/*     */   {
+/*  49 */     return this.medicineId;
+/*     */   }
+/*     */ 
+/*     */   public void setMedicineId(Integer medicineId)
+/*     */   {
+/*  61 */     this.medicineId = medicineId;
+/*     */   }
+/*     */ 
+/*     */   public String getMedicineName()
+/*     */   {
+/*  73 */     return this.medicineName;
+/*     */   }
+/*     */ 
+/*     */   public void setMedicineName(String medicineName)
+/*     */   {
+/*  85 */     this.medicineName = medicineName;
+/*     */   }
+/*     */ 
+/*     */   public String getZlyq()
+/*     */   {
+/*  97 */     return this.zlyq;
+/*     */   }
+/*     */ 
+/*     */   public void setZlyq(String zlyq)
+/*     */   {
+/* 109 */     this.zlyq = zlyq;
+/*     */   }
+/*     */ }
+
+/* Location:           D:\李慧医药项目\tcmages\krt\WEB-INF\classes\
+ * Qualified Name:     cn.krt.zbcg.commons.bo.system.MedicineBO
+ * JD-Core Version:    0.6.2
+ */

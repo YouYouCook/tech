@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+<!-- ************   品种service维护service **************** -->
+	<bean parent="baseTxService" id="medicineServices">
+		<property name="target">
+			<bean class="cn.krt.zbcg.system.services.impl.MedicineServicesImpl">
+				<property name="baseDao">
+					<ref bean="baseDao" />
+				</property>
+				<property name="medicineDAO">
+					<ref bean="medicineDAO" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+    
+<!-- ************   品种维护dao映射 数据源，sqlMap  **************** -->   	
+	<bean id="medicineDAO" class="cn.krt.zbcg.system.dao.impl.MedicineDAOImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="sqlMapClient">
+			<ref bean="sqlMapClient" />
+		</property>
+	</bean>
+	<!-- ************   用户管理service维护service **************** -->
+	<bean parent="baseTxService" id="userServices">
+		<property name="target">
+			<bean class="cn.krt.zbcg.system.services.impl.UserServicesImpl">
+				<property name="baseDao">
+					<ref bean="baseDao" />
+				</property>
+				<property name="userDAO">
+					<ref bean="userDAO" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+    
+<!-- ************   用户管理dao映射 数据源，sqlMap  **************** -->   	
+	<bean id="userDAO" class="cn.krt.zbcg.system.dao.impl.UserDAOImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="sqlMapClient">
+			<ref bean="sqlMapClient" />
+		</property>
+	</bean>
+	<!-- ************  供应商账号管理service维护service **************** -->
+	<bean parent="baseTxService" id="customerServices">
+		<property name="target">
+			<bean class="cn.krt.zbcg.system.services.impl.CustomerServicesImpl">
+				<property name="baseDao">
+					<ref bean="baseDao" />
+				</property>
+				<property name="customerDAO">
+					<ref bean="customerDAO" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+    
+	<!-- ************   供应商账号管理dao映射 数据源，sqlMap  **************** -->   	
+	<bean id="customerDAO" class="cn.krt.zbcg.system.dao.impl.CustomerDAOImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="sqlMapClient">
+			<ref bean="sqlMapClient" />
+		</property>
+	</bean>
+	
+	<!-- ************   采购品种录入  **************** -->  
+	<bean id="cineCgDAO" class="cn.krt.zbcg.system.dao.impl.MedicineCgDAOImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="sqlMapClient">
+			<ref bean="sqlMapClient" />
+		</property>
+	</bean> 	
+	<bean parent="baseTxService" id="cineCgServices">
+		<property name="target">
+			<bean class="cn.krt.zbcg.system.services.impl.MedicineCgServicesImpl">
+				<property name="baseDao">
+					<ref bean="baseDao" />
+				</property>
+				<property name="cineCgDAO">
+					<ref bean="cineCgDAO" />
+				</property>
+				<property name="cineJbDAO">
+					<ref bean="cineJbDAO" />
+				</property>
+				<property name="medicineDAO">
+					<ref bean="medicineDAO" />
+				</property>
+				<property name="customerDAO">
+					<ref bean="customerDAO" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<!-- ************   客户竞标录入  **************** -->  
+	<bean id="cineJbDAO" class="cn.krt.zbcg.system.dao.impl.MedicineJbDAOImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="sqlMapClient">
+			<ref bean="sqlMapClient" />
+		</property>
+	</bean> 	
+	<bean parent="baseTxService" id="cineJbServices">
+		<property name="target">
+			<bean class="cn.krt.zbcg.system.services.impl.MedicineJbServicesImpl">
+				<property name="baseDao">
+					<ref bean="baseDao" />
+				</property>
+				<property name="cineJbDAO">
+					<ref bean="cineJbDAO" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<!-- ************   质量检测录入  **************** -->  
+	<bean id="cineZbDAO" class="cn.krt.zbcg.system.dao.impl.MedicineZbDAOImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="sqlMapClient">
+			<ref bean="sqlMapClient" />
+		</property>
+	</bean> 	
+	<bean parent="baseTxService" id="cineZbServices">
+		<property name="target">
+			<bean class="cn.krt.zbcg.system.services.impl.MedicineZbServicesImpl">
+				<property name="baseDao">
+					<ref bean="baseDao" />
+				</property>
+				<property name="cineZbDAO">
+					<ref bean="cineZbDAO" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- ************  VIP供应商管理  **************** -->  
+	<bean id="customerVipDAO" class="cn.krt.zbcg.system.dao.impl.CustomerVipDAOImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="sqlMapClient">
+			<ref bean="sqlMapClient" />
+		</property>
+	</bean> 	
+	<bean parent="baseTxService" id="customerVipServices">
+		<property name="target">
+			<bean class="cn.krt.zbcg.system.services.impl.CustomerVipServicesImpl">
+				<property name="baseDao">
+					<ref bean="baseDao" />
+				</property>
+				<property name="customerVipDAO">
+					<ref bean="customerVipDAO" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- ************  VIP中标管理  **************** -->  
+	<bean id="zbDAO" class="cn.krt.zbcg.system.dao.impl.VipzbDAOImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="sqlMapClient">
+			<ref bean="sqlMapClient" />
+		</property>
+	</bean> 	
+	<bean parent="baseTxService" id="vipzbServices">
+		<property name="target">
+			<bean class="cn.krt.zbcg.system.services.impl.VipzbServicesImpl">
+				<property name="baseDao">
+					<ref bean="baseDao" />
+				</property>
+				<property name="zbDAO">
+					<ref bean="zbDAO" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- ************  招标公告管理  **************** -->  
+	<bean id="ceDAO" class="cn.krt.zbcg.system.dao.impl.NoticeDAOImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="sqlMapClient">
+			<ref bean="sqlMapClient" />
+		</property>
+	</bean> 	
+	<bean parent="baseTxService" id="noticeServices">
+		<property name="target">
+			<bean class="cn.krt.zbcg.system.services.impl.NoticeServicesImpl">
+				<property name="baseDao">
+					<ref bean="baseDao" />
+				</property>
+				<property name="ceDAO">
+					<ref bean="ceDAO" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+</beans>

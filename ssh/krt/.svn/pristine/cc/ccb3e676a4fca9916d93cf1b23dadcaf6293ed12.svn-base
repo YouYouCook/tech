@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="BUSSINESS_S_T_ROLE" >
+  <resultMap id="abatorgenerated_STRoleResult" class="cn.id5.idreal_hr.commons.bo.system.RoleBO" >
+  
+    <result column="ROLE_ID" property="roleId" jdbcType="long" />
+    <result column="ROLE_CODE" property="roleCode" jdbcType="VARCHAR" />
+    <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+    <result column="ROLE_TYPE" property="roleType" jdbcType="CHAR" />
+  </resultMap>
+  
+  
+  <resultMap id="result" class="cn.id5.idreal_hr.commons.bo.system.RoleBO" extends="abatorgenerated_STRoleResult">
+        <result property="employees" column="role_Id" select="GBOSS_S_T_EMPLOYEES.getEmByRoleId"/>
+        <result property="resources" column="role_Id" select="GBOSS_S_T_FUNC.getResourceByRoleId"/>
+  </resultMap>
+  <!-- 根据坐席id查找坐席拥有的角色 -->
+  <select id="getRoleBySeatId" parameterClass="long"  resultMap="result" resultClass="cn.id5.idreal_hr.commons.bo.system.RoleBO">
+        select r.* from S_T_ROLE r where r.ROLE_ID in
+        (select ROLE_ID from C_T_SEAT_ROLE where SEAT_ID=#value#)
+  </select>
+  <!-- 查找拥有某个菜单的角色-->
+  <select id="getRoleByResourceId" parameterClass="long" resultMap="result" resultClass="cn.id5.idreal_hr.commons.bo.system.RoleBO" >
+        select r.* from S_T_ROLE r where r.ROLE_ID in
+        (select ROLE_ID from S_T_ROLE_FUNC where FUNC_ID=#value#)
+  </select>
+  <!-- 
+	根据条件查找角色
+	-->
+  <select id="selectAll" resultMap="result" parameterClass="java.util.Map"> 	
+   	SELECT
+   			 * 
+   	FROM 
+   			( SELECT ROWNUM AS NUMROW, c.* from ( select ROLE_ID, ROLE_CODE, ROLE_NAME, ROLE_TYPE
+    FROM 
+    		S_T_ROLE WHERE 1=1 
+			<isNotNull property="roleCode">
+				<isNotEmpty  property="roleCode">
+				and ROLE_CODE like '%$roleCode$%'
+				</isNotEmpty> 
+			</isNotNull>
+			<isNotNull property="roleName">
+				<isNotEmpty  property="roleName">
+				and ROLE_NAME like '%$roleName$%'
+				</isNotEmpty>
+			</isNotNull>
+			<isNotNull property="roleType">
+				<isNotEmpty  property="roleType">
+				and ROLE_TYPE like '%$roleType$%'
+				</isNotEmpty>
+			</isNotNull>
+   			 ) c)    
+   			<![CDATA[
+    
+   WHERE 
+    		NUMROW >= $ibegin$  AND NUMROW < $iend$
+   			]]>   	
+  </select>
+  <!-- 
+	   根据条件查找角色的条数
+	-->
+  <select id="selectAllOfCount" resultClass="java.lang.String" parameterClass="java.util.Map">
+     SELECT 
+     		count(1) as ID 
+     FROM 
+     		S_T_ROLE 
+     WHERE 
+     		1=1 
+			<isNotNull property="roleCode">
+				<isNotEmpty  property="roleCode">
+				and ROLE_CODE like '%$roleCode$%'
+				</isNotEmpty> 
+			</isNotNull>
+			<isNotNull property="roleName">
+				<isNotEmpty  property="roleName">
+				and ROLE_NAME like '%$roleName$%'
+				</isNotEmpty>
+			</isNotNull>
+			<isNotNull property="roleType">
+				<isNotEmpty  property="roleType">
+				and ROLE_TYPE like '%$roleType$%'
+				</isNotEmpty>
+			</isNotNull>
+  </select>
+  <!-- 根据坐席id查找坐席拥有的角色 -->
+  <select id="getRolesById" parameterClass="java.util.Map"  resultMap="result" resultClass="cn.id5.idreal_hr.commons.bo.system.RoleBO">
+        select r.* from S_T_ROLE r where r.ROLE_ID not in
+        (select ROLE_ID from C_T_SEAT_ROLE where SEAT_ID=#seatId#)
+        and ROLE_TYPE=3
+  </select>
+  <!--  -->
+   <select id="getRolesByIdAndAccountType" parameterClass="java.util.Map"  resultMap="result" resultClass="cn.id5.idreal_hr.commons.bo.system.RoleBO">
+        select r.* from S_T_ROLE r where r.ROLE_ID not in
+        (select ROLE_ID from C_T_SEAT_ROLE where SEAT_ID=#seatId#)
+        and ROLE_TYPE=3
+        and substr(r.role_name,0,3) =
+            (select customer_code
+               from c_t_customer cus
+              where cus.customer_code in
+                    (select substr(u.customer_code, 0, 3)
+                       from c_t_customer u
+                      where u.customer_id in
+                            (select customer_id
+                               from c_t_seat
+                              where seat_id = #seatId#)
+                        and RECORD_TYPE = 0
+                        and RECORD_STATE = 1)
+                and RECORD_TYPE = 0
+                and RECORD_STATE = 1)
+  </select>
+  
+  <insert id="insert" parameterClass="cn.id5.idreal_hr.commons.bo.system.RoleBO" >
+   <selectKey resultClass="int" keyProperty="roleId" type="pre" > 
+		SELECT SEQ_SYSTEM.NEXTVAL AS ID FROM DUAL 
+	  </selectKey>
+	  insert into S_T_ROLE (ROLE_ID, ROLE_CODE,ROLE_NAME,ROLE_TYPE)
+	  values (#roleId#,#roleCode#, #roleName#,#roleType#)
+	</insert>
+	
+	<select id="selectByPrimaryKey" resultMap="result" parameterClass="cn.id5.idreal_hr.commons.bo.system.RoleBO" >
+    SELECT 
+    		 	 *
+    FROM 
+    		 S_T_ROLE 
+    
+    WHERE  
+    		ROLE_ID = #roleId#
+  </select>
+     <update id="update" parameterClass="cn.id5.idreal_hr.commons.bo.system.RoleBO" >
+    update 
+    		S_T_ROLE
+    set 
+    			 ROLE_ID =#roleId#,
+    			 ROLE_NAME =#roleName#,
+   				 ROLE_TYPE=#roleType#
+      
+    where 		ROLE_ID = #roleId#
+  </update>
+  
+    <delete id="delete" parameterClass="java.util.Map" >
+    delete from S_T_ROLE where ROLE_ID =#roleId#
+  </delete>
+</sqlMap>

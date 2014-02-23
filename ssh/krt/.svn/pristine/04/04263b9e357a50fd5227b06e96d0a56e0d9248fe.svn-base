@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <!-- 首先进行排名、排名那些不等于2的数据,根据竞价排名系统要自动完成到了截标采购日,采购部门才能看到需要质量部检查的数据，也就是和服务器当前时间进行比较,
+    	 更新样品编号的定时任务,每天的24点执行,保留原来的竞价排名的方法,勿删除
+     -->
+	<bean id="getTops" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="cineCgServices" />
+		</property>
+		<property name="targetMethod">
+			<value>resetGetTops</value>
+		</property>
+	</bean>
+	<!-- 
+		秒 0-59 , - * /   
+		分 0-59 , - * /   
+		小时 0-23 , - * /   
+		日期 1-31 , - * ? / L W C   
+		月份 1-12 或者 JAN-DEC , - * /   
+		星期 1-7 或者 SUN-SAT , - * ? / L C #   
+		年（可选） 留空, 1970-2099 , - * /  
+		只有日期和星期才能用？替代，年份可以为空，必须按照此顺序
+		详情可以参考http://dogstar.iteye.com/blog/116130 
+		 -->
+	<bean id="top" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="getTops" />
+		</property>
+		<property name="cronExpression">
+			<value>0 0 0 * * ?</value>
+		</property>
+	</bean>
+	
+	
+	 <!--投标开始日短信提示供应商上线投标,并告知投标截止时间-->
+	<bean id="tenderStart" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="cineCgServices" />
+		</property>
+		<property name="targetMethod">
+			<value>startTender</value>
+		</property>
+	</bean>
+	<bean id="preTender" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="tenderStart" />
+		</property>
+		<property name="cronExpression">
+			<value>0 30 9 * * ?</value>
+		</property>
+	</bean>
+	
+	<!--投标截止日短信提示供应商上线抓紧时间投标-->
+	<bean id="tenderEnd" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="cineCgServices" />
+		</property>
+		<property name="targetMethod">
+			<value>endTender</value>
+		</property>
+	</bean>
+	<bean id="finTender" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="tenderEnd" />
+		</property>
+		<property name="cronExpression">
+			<value>0 30 9 * * ?</value>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="top" />
+				<ref bean="preTender" />
+				<ref bean="finTender" />
+			</list>
+		</property>
+	</bean>	
+</beans>

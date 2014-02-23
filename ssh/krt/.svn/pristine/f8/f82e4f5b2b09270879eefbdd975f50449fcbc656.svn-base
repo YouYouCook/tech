@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="S_T_USER" >
+  <resultMap id="UserResult" class="cn.id5.idreal_hr.commons.bo.system.UserBO" >
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="USER_TYPE" property="userType" jdbcType="CHAR" />
+    
+  </resultMap>
+  
+  <resultMap id="result" class="cn.id5.idreal_hr.commons.bo.system.UserBO" extends="UserResult">
+       <result column="UU_NAME" property="userUsBO.uuName" jdbcType="CHAR" />
+       <result column="EMP_NAME" property="employeesBO.empName" jdbcType="CHAR" />
+  </resultMap>
+  	
+  <select id="selectByPrimaryKey" resultMap="UserResult" parameterClass="cn.id5.idreal_hr.commons.bo.system.UserBO" >
+    select USER_ID, USER_NAME, USER_TYPE
+    from S_T_USER
+    where USER_ID = #userId# and USER_TYPE = 1
+  </select>
+  <select id="selectAll" resultMap="result" parameterClass="java.util.Map" >
+
+     SELECT * FROM ( SELECT ROWNUM AS NUMROW, c.* from ( 
+     SELECT 
+     		a.USER_ID,
+     		a.USER_NAME,
+     		a.USER_TYPE,
+	     	b.UU_NAME,
+	     	c.EMP_NAME 
+    FROM 
+    		S_T_USER  a, S_T_USER_US  b,S_T_EMPLOYEES  c
+    WHERE		
+    		1=1   and  a.USER_ID = b.USER_ID and b.UU_NAME = c.EMP_ACCOUNT and a.USER_ID = #userId#  and a.USER_TYPE = 1
+    		
+     ) c) 
+     <![CDATA[ WHERE NUMROW >= $ibegin$  AND NUMROW < $iend$  ]]> ORDER BY USER_NAME 
+  </select>
+  <select id="selectAllOfCount" resultClass="java.lang.String" parameterClass="java.util.Map" >
+  
+     SELECT count(1) as ID from ( 
+     
+     SELECT 
+     		a.USER_ID,
+     		a.USER_NAME,
+     		a.USER_TYPE,
+	     	b.UU_NAME,
+	     	c.EMP_NAME
+    FROM 
+    		S_T_USER  a, S_T_USER_US  b,S_T_EMPLOYEES  c
+    WHERE 
+    		1=1   and  a.USER_ID = b.USER_ID and b.UU_NAME = c.EMP_ACCOUNT and a.USER_ID = #userId# and a.USER_TYPE = 1 ORDER BY a.USER_NAME 
+     ) 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="cn.id5.idreal_hr.commons.bo.system.UserBO" >
+  
+    delete from S_T_USER
+    where USER_ID = #userId#
+  </delete>
+  <insert id="insert" parameterClass="cn.id5.idreal_hr.commons.bo.system.UserBO" >
+  <selectKey resultClass="int" keyProperty="userId" type="pre" > 
+		SELECT SEQ_SYSTEM.NEXTVAL AS ID FROM DUAL 
+	</selectKey>
+    insert into S_T_USER (USER_ID, USER_NAME, USER_TYPE)
+    values (#userId#, #userName#, #userType#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="cn.id5.idreal_hr.commons.bo.system.UserBO" >
+   
+    update S_T_USER
+    set USER_NAME = #userName#,
+      USER_TYPE = #userType#
+    where USER_ID = #userId# and USER_TYPE = 1
+  </update>
+  
+  <select id="getUserByAccount" resultMap="UserResult" parameterClass="cn.id5.idreal_hr.commons.bo.system.UserBO" >
+    select USER_ID, USER_NAME, USER_TYPE
+    from S_T_USER
+    where USER_NAME = #userName# and USER_TYPE = 1
+  </select>
+</sqlMap>

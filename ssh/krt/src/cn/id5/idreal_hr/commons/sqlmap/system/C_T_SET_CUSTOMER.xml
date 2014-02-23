@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="C_T_SET_CUSTOMER" >
+  <resultMap id="CustomerResult" class="cn.id5.idreal_hr.commons.bo.system.CustomerBO" >
+  
+    <result column="CUSTOMER_ID" property="customerId" jdbcType="DECIMAL" />
+    <result column="CUSTOMER_CODE" property="customerCode" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_LEVEL" property="customerLevel" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_SHORT_NAME" property="customerShortName" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_CONTACT" property="customerContact" jdbcType="VARCHAR" />
+    <result column="CONTACT_EMAIL" property="contactEmail" jdbcType="VARCHAR" />
+    <result column="CONTACT_TEL" property="contactTel" jdbcType="VARCHAR" />
+    <result column="CONTACT_MOBILE" property="contactMobile" jdbcType="VARCHAR" />
+    <result column="CONTACT_FAX" property="contactFax" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_CONTACT2" property="customerContact2" jdbcType="VARCHAR" />
+    <result column="CONTACT2_EMAIL" property="contact2Email" jdbcType="VARCHAR" />
+    <result column="CONTACT2_TEL" property="contact2Tel" jdbcType="VARCHAR" />
+    <result column="CONTACT2_MOBILE" property="contact2Mobile" jdbcType="VARCHAR" />
+    <result column="CONTACT2_FAX" property="contact2Fax" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_ZIP" property="customerZip" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_ADDRESS" property="customerAddress" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_SAIL" property="customerSail" jdbcType="VARCHAR" />
+    <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="INDUSTRY_PROPERTY" property="industryProperty" jdbcType="VARCHAR" />
+    <result column="BILLING_TYPE" property="billingType" jdbcType="VARCHAR" />
+    <result column="APP_FIELD" property="appField" jdbcType="VARCHAR" />
+    <result column="WEB_TEST_IP" property="webTestIp" jdbcType="VARCHAR" />
+    <result column="WEB_OFFICIAL_IP" property="webOfficialIp" jdbcType="VARCHAR" />
+    <result column="WS_TEST_IP" property="wsTestIp" jdbcType="VARCHAR" />
+    <result column="WS_OFFICIAL_IP" property="wsOfficialIp" jdbcType="VARCHAR" />
+    <result column="OUTSTANDING" property="outstanding" jdbcType="DECIMAL" />
+    <result column="RECORD_STATE" property="recordState" jdbcType="VARCHAR" />
+    <result column="RECORD_TYPE" property="recordType" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+   <resultMap id="result" class="cn.id5.idreal_hr.commons.bo.system.CustomerBO" extends="CustomerResult">
+        <result property="employees" column="CUSTOMER_ID" select="GBOSS_S_T_EMPLOYEES.getEmByCustomerId"/>
+  </resultMap>
+  
+  <select id="getCustomerByEmId" parameterClass="long"  resultMap="result" resultClass="cn.id5.idreal_hr.commons.bo.system.CustomerBO">
+        select r.* from C_T_CUSTOMER r where r.CUSTOMER_ID in
+        (select CUSTOMERID from S_T_EMP_CUSTOMER where EMPID=#value#) and r.CUSTOMER_LEVEL = 1 and r.RECORD_TYPE = 0 ORDER BY r.CUSTOMER_ID DESC
+ </select>
+  
+ <select id="getCustomersById" parameterClass="java.util.Map"  resultMap="result" resultClass="cn.id5.idreal_hr.commons.bo.system.CustomerBO">
+        select r.* from C_T_CUSTOMER r where r.CUSTOMER_ID not in
+        (select CUSTOMERID from S_T_EMP_CUSTOMER where EMPID=#empId#)and r.CUSTOMER_LEVEL = 1 and r.RECORD_TYPE = 0 ORDER BY r.CUSTOMER_ID DESC
+ </select>
+  
+  <select id="selectByPrimaryKey" resultMap="CustomerResult" parameterClass="cn.id5.idreal_hr.commons.bo.system.CustomerBO" >
+    select CUSTOMER_ID, CUSTOMER_CODE, CUSTOMER_LEVEL, CUSTOMER_SHORT_NAME, CUSTOMER_NAME,
+      CUSTOMER_CONTACT, CONTACT_EMAIL, CONTACT_TEL, CONTACT_MOBILE, CONTACT_FAX, CUSTOMER_CONTACT2,
+      CONTACT2_EMAIL, CONTACT2_TEL, CONTACT2_MOBILE, CONTACT2_FAX, CUSTOMER_ZIP, CUSTOMER_ADDRESS,
+      CUSTOMER_SAIL, PROVINCE, CITY, INDUSTRY_PROPERTY, BILLING_TYPE, APP_FIELD, WEB_TEST_IP,
+      WEB_OFFICIAL_IP, WS_TEST_IP, WS_OFFICIAL_IP, OUTSTANDING, RECORD_STATE,RECORD_TYPE
+    from C_T_CUSTOMER
+    where CUSTOMER_ID = #customerId# and C_T_CUSTOMER.CUSTOMER_LEVEL = 1 and C_T_CUSTOMER.RECORD_TYPE = 0
+  </select>
+  <select id="selectAll" resultMap="CustomerResult" parameterClass="java.util.Map" >
+     SELECT * FROM ( SELECT ROWNUM AS NUMROW, c.* from ( 
+    select CUSTOMER_ID, CUSTOMER_CODE, CUSTOMER_LEVEL, CUSTOMER_SHORT_NAME, CUSTOMER_NAME,
+      CUSTOMER_CONTACT, CONTACT_EMAIL, CONTACT_TEL, CONTACT_MOBILE, CONTACT_FAX, CUSTOMER_CONTACT2,
+      CONTACT2_EMAIL, CONTACT2_TEL, CONTACT2_MOBILE, CONTACT2_FAX, CUSTOMER_ZIP, CUSTOMER_ADDRESS,
+      CUSTOMER_SAIL, PROVINCE, CITY, INDUSTRY_PROPERTY, BILLING_TYPE, APP_FIELD, WEB_TEST_IP,
+      WEB_OFFICIAL_IP, WS_TEST_IP, WS_OFFICIAL_IP, OUTSTANDING, RECORD_STATE,RECORD_TYPE
+    from C_T_CUSTOMER
+    where  C_T_CUSTOMER.CUSTOMER_LEVEL = 1 and C_T_CUSTOMER.RECORD_TYPE = 0
+     ) c) 
+     <![CDATA[ WHERE NUMROW >= $ibegin$  AND NUMROW < $iend$  ]]>
+  </select>
+  <select id="selectAllOfCount" resultClass="java.lang.String" parameterClass="java.util.Map" >
+     SELECT count(1) as ID from ( 
+    select CUSTOMER_ID, CUSTOMER_CODE, CUSTOMER_LEVEL, CUSTOMER_SHORT_NAME, CUSTOMER_NAME,
+      CUSTOMER_CONTACT, CONTACT_EMAIL, CONTACT_TEL, CONTACT_MOBILE, CONTACT_FAX, CUSTOMER_CONTACT2,
+      CONTACT2_EMAIL, CONTACT2_TEL, CONTACT2_MOBILE, CONTACT2_FAX, CUSTOMER_ZIP, CUSTOMER_ADDRESS,
+      CUSTOMER_SAIL, PROVINCE, CITY, INDUSTRY_PROPERTY, BILLING_TYPE, APP_FIELD, WEB_TEST_IP,
+      WEB_OFFICIAL_IP, WS_TEST_IP, WS_OFFICIAL_IP, OUTSTANDING, RECORD_STATE,RECORD_TYPE
+    from C_T_CUSTOMER
+    where  C_T_CUSTOMER.CUSTOMER_LEVEL = 1 and C_T_CUSTOMER.RECORD_TYPE = 0
+     ) 
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="cn.id5.idreal_hr.commons.bo.system.CustomerBO" >
+    delete from C_T_CUSTOMER
+    where CUSTOMER_ID = #customerId#
+  </delete>
+  <insert id="insert" parameterClass="cn.id5.idreal_hr.commons.bo.system.CustomerBO" >
+    insert into C_T_CUSTOMER (CUSTOMER_ID, CUSTOMER_CODE, CUSTOMER_LEVEL, CUSTOMER_SHORT_NAME,
+      CUSTOMER_NAME, CUSTOMER_CONTACT, CONTACT_EMAIL, CONTACT_TEL, CONTACT_MOBILE, CONTACT_FAX,
+      CUSTOMER_CONTACT2, CONTACT2_EMAIL, CONTACT2_TEL, CONTACT2_MOBILE, CONTACT2_FAX, CUSTOMER_ZIP,
+      CUSTOMER_ADDRESS, CUSTOMER_SAIL, PROVINCE, CITY, INDUSTRY_PROPERTY, BILLING_TYPE, APP_FIELD,
+      WEB_TEST_IP, WEB_OFFICIAL_IP, WS_TEST_IP, WS_OFFICIAL_IP, OUTSTANDING, RECORD_STATE,RECORD_TYPE)
+    values (#customerId#, #customerCode#, #customerLevel#, #customerShortName#, #customerName#,
+      #customerContact#, #contactEmail#, #contactTel#, #contactMobile#, #contactFax#,
+      #customerContact2#, #contact2Email#, #contact2Tel#, #contact2Mobile#, #contact2Fax#,
+      #customerZip#, #customerAddress#, #customerSail#, #province#, #city#, #industryProperty#,
+      #billingType#, #appField#, #webTestIp#, #webOfficialIp#, #wsTestIp#, #wsOfficialIp#,
+      #outstanding#, #recordState#,#recordType#)
+  </insert>
+  <update id="updateByPrimaryKey" parameterClass="cn.id5.idreal_hr.commons.bo.system.CustomerBO" >
+    update C_T_CUSTOMER
+    set CUSTOMER_CODE = #customerCode#,
+      CUSTOMER_LEVEL = #customerLevel#,
+      CUSTOMER_SHORT_NAME = #customerShortName#,
+      CUSTOMER_NAME = #customerName#,
+      CUSTOMER_CONTACT = #customerContact#,
+      CONTACT_EMAIL = #contactEmail#,
+      CONTACT_TEL = #contactTel#,
+      CONTACT_MOBILE = #contactMobile#,
+      CONTACT_FAX = #contactFax#,
+      CUSTOMER_CONTACT2 = #customerContact2#,
+      CONTACT2_EMAIL = #contact2Email#,
+      CONTACT2_TEL = #contact2Tel#,
+      CONTACT2_MOBILE = #contact2Mobile#,
+      CONTACT2_FAX = #contact2Fax#,
+      CUSTOMER_ZIP = #customerZip#,
+      CUSTOMER_ADDRESS = #customerAddress#,
+      CUSTOMER_SAIL = #customerSail#,
+      PROVINCE = #province#,
+      CITY = #city#,
+      INDUSTRY_PROPERTY = #industryProperty#,
+      BILLING_TYPE = #billingType#,
+      APP_FIELD = #appField#,
+      WEB_TEST_IP = #webTestIp#,
+      WEB_OFFICIAL_IP = #webOfficialIp#,
+      WS_TEST_IP = #wsTestIp#,
+      WS_OFFICIAL_IP = #wsOfficialIp#,
+      OUTSTANDING = #outstanding#,
+      RECORD_STATE = #recordState#,
+      RECORD_TYPE = #recordType#
+    where CUSTOMER_ID = #customerId#
+  </update>
+</sqlMap>

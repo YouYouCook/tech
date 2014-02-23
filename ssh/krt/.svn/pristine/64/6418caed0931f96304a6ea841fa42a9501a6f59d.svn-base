@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE struts-config PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+    "dtd/struts-config_1_2.dtd">
+
+<struts-config>
+
+	<form-beans>
+	</form-beans>
+
+	<!--
+		========== Global Forward Definitions ==============================
+	-->
+	<global-forwards>
+	</global-forwards>
+
+	<!--
+		========== Action Mapping Definitions ==============================
+	-->
+	<action-mappings>
+		<!-- Image dispose -->
+		<action path="/image" type="org.ssi.struts.action.ImageAction"
+			parameter="operate" validate="false">
+		</action>
+	</action-mappings>
+
+	<!--
+		========== Associated Messages Ressource settings ===================
+	-->
+	<message-resources parameter="org.ssi.ApplicationResource"
+		null="false" />
+
+</struts-config>

@@ -1,0 +1,471 @@
+/*     */ package cn.krt.zbcg.system.web.action;
+/*     */ 
+/*     */ import cn.krt.zbcg.commons.bo.system.MedicineZbBO;
+/*     */ import cn.krt.zbcg.commons.bo.system.UserBO;
+/*     */ import cn.krt.zbcg.commons.bo.system.VipzbBO;
+/*     */ import cn.krt.zbcg.system.services.ICustomerServices;
+/*     */ import cn.krt.zbcg.system.services.ICustomerVipServices;
+/*     */ import cn.krt.zbcg.system.services.IMedicineServices;
+/*     */ import cn.krt.zbcg.system.services.IMedicineZbServices;
+/*     */ import cn.krt.zbcg.system.services.IVipzbServices;
+import cn.krt.zbcg.system.web.form.FapiaoForm;
+/*     */ import cn.krt.zbcg.system.web.form.MedicineZbForm;
+
+/*     */ import java.io.File;
+/*     */ import java.io.FileInputStream;
+/*     */ import java.io.InputStream;
+/*     */ import java.util.HashMap;
+/*     */ import java.util.List;
+/*     */ import java.util.Map;
+
+/*     */ import javax.servlet.ServletOutputStream;
+/*     */ import javax.servlet.http.HttpServletRequest;
+/*     */ import javax.servlet.http.HttpServletResponse;
+/*     */ import javax.servlet.http.HttpSession;
+
+/*     */ import org.apache.commons.lang.exception.ExceptionUtils;
+/*     */ import org.apache.commons.logging.Log;
+/*     */ import org.apache.struts.action.ActionForm;
+/*     */ import org.apache.struts.action.ActionForward;
+/*     */ import org.apache.struts.action.ActionMapping;
+/*     */ import org.ssi.common.Operate;
+/*     */ import org.ssi.common.PageInfo;
+/*     */ import org.ssi.struts.action.SSIDispatchAction;
+/*     */ 
+/*     */ public class MedicineZbAction extends SSIDispatchAction
+/*     */ {
+/*     */   private IMedicineZbServices cineZbServices;
+/*     */   private ICustomerVipServices customerVipServices;
+/*     */   private IMedicineServices medicineServices;
+/*     */   private ICustomerServices customerServices;
+/*     */   private IVipzbServices vipzbServices;
+/*     */ 
+/*     */   private ICustomerVipServices getOmerVipServices()
+/*     */   {
+/*  40 */     if (this.customerVipServices == null) {
+/*  41 */       this.customerVipServices = ((ICustomerVipServices)getBean("customerVipServices"));
+/*     */     }
+/*  43 */     return this.customerVipServices;
+/*     */   }
+/*     */ 
+/*     */   private IMedicineServices getMedicineServices()
+/*     */   {
+/*  49 */     if (this.medicineServices == null) {
+/*  50 */       this.medicineServices = ((IMedicineServices)getBean("medicineServices"));
+/*     */     }
+/*  52 */     return this.medicineServices;
+/*     */   }
+/*     */ 
+/*     */   private ICustomerServices getCustomerServices()
+/*     */   {
+/*  58 */     if (this.customerServices == null) {
+/*  59 */       this.customerServices = ((ICustomerServices)getBean("customerServices"));
+/*     */     }
+/*  61 */     return this.customerServices;
+/*     */   }
+/*     */   private IMedicineZbServices getCineZbServices() {
+/*  64 */     if (this.cineZbServices == null) {
+/*  65 */       this.cineZbServices = ((IMedicineZbServices)getBean("cineZbServices"));
+/*     */     }
+/*  67 */     return this.cineZbServices;
+/*     */   }
+/*     */ 
+/*     */   private IVipzbServices getZbServices()
+/*     */   {
+/*  72 */     if (this.vipzbServices == null) {
+/*  73 */       this.vipzbServices = ((IVipzbServices)getBean("vipzbServices"));
+/*     */     }
+/*  75 */     return this.vipzbServices;
+/*     */   }
+/*     */ 
+/*     */   public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception
+/*     */   {
+/*  80 */     MedicineZbForm cineZbForm = (MedicineZbForm)form;
+/*  81 */     PageInfo pageInfo = new PageInfo();
+/*  82 */     getCineZbServices().setRequest(request);
+/*  83 */     Map map = Operate.describe(cineZbForm);
+/*  84 */     if ((cineZbForm.getMedicineCode() != null) || 
+/*  85 */       (cineZbForm.getBeginDate() != null) || 
+/*  86 */       (cineZbForm.getEndDate() != null) || 
+/*  87 */       (cineZbForm.getMedicineId() != null)) {
+/*  88 */       List cineZbList = getCineZbServices().findAll(pageInfo, map);
+/*  89 */       request.setAttribute("cineZbList", cineZbList);
+/*     */     }
+/*  91 */     request.setAttribute("pageInfo", pageInfo);
+/*  92 */     request.setAttribute("beginDate", cineZbForm.getBeginDate());
+/*  93 */     request.setAttribute("endDate", cineZbForm.getEndDate());
+/*  94 */     request.setAttribute("name", cineZbForm == null ? "" : cineZbForm.getName());
+/*  95 */     request.setAttribute("medicineId", cineZbForm == null ? "" : cineZbForm.getMedicineId());
+/*  96 */     request.setAttribute("state", cineZbForm == null ? "" : cineZbForm.getState());
+/*  97 */     return mapping.findForward("zbList");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward toAdd(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 107 */     if (log.isDebugEnabled()) log.debug("forward to add page.");
+/* 108 */     return mapping.findForward("toAdd");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward add(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 118 */     if (log.isDebugEnabled()) log.debug("get actionForm object.");
+/* 119 */     MedicineZbForm cineZbForm = (MedicineZbForm)form;
+/* 120 */     if (log.isDebugEnabled()) log.debug("get business object.");
+/* 121 */     MedicineZbBO cineZbBO = cineZbForm.getCineZbBO();
+/*     */     try {
+/* 123 */       if (log.isDebugEnabled()) log.debug("insert data.");
+/* 124 */       getCineZbServices().insert(cineZbBO);
+/*     */     } catch (Exception e) {
+/* 126 */       ExceptionUtils.getFullStackTrace(e);
+/*     */     }
+/* 128 */     return list(mapping, form, request, response);
+/*     */   }
+/*     */ 
+/*     */   public ActionForward toUpdate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 138 */     if (log.isDebugEnabled()) log.debug("get actionForm object.");
+/* 139 */     MedicineZbForm cineZbForm = (MedicineZbForm)form;
+/* 140 */     String id = cineZbForm.getSelectNos()[0];
+/* 141 */     if (log.isDebugEnabled()) log.debug("get data detail by id=" + id + ".");
+/* 142 */     MedicineZbBO cineZbBO = getCineZbServices().findById(Integer.valueOf(id));
+/* 143 */     if (log.isDebugEnabled()) log.debug("set business object.");
+/* 144 */     cineZbForm.setCineZbBO(cineZbBO);
+/* 145 */     return mapping.findForward("toUpdate");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 155 */     String zbId = request.getParameter("zbId1");
+/* 156 */     String state = request.getParameter(zbId + "state");
+/*     */ 
+/* 158 */     Double cfl = Double.valueOf(Double.parseDouble(request.getParameter(zbId + "cfl")));
+/* 159 */     String jcy = request.getParameter(zbId + "jcy");
+/* 160 */     String shr = request.getParameter(zbId + "shr");
+/* 161 */     String remark = request.getParameter(zbId + "remark");
+/* 162 */     MedicineZbBO cineZbBO = new MedicineZbBO();
+/* 163 */     cineZbBO.setState(state);
+/*     */ 
+/* 165 */     cineZbBO.setCfl(cfl);
+/* 166 */     cineZbBO.setJcy(jcy);
+/* 167 */     cineZbBO.setShr(shr);
+/* 168 */     cineZbBO.setRemark(remark);
+/* 169 */     cineZbBO.setZbId(Integer.valueOf(Integer.parseInt(zbId)));
+/*     */     try {
+/* 171 */       getCineZbServices().update(cineZbBO);
+/*     */     } catch (Exception e) {
+/* 173 */       ExceptionUtils.getFullStackTrace(e);
+/*     */     }
+/* 175 */     return list(mapping, form, request, response);
+/*     */   }
+/*     */ 
+/*     */   public ActionForward toDelete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 185 */     if (log.isDebugEnabled()) log.debug("get actionForm object.");
+/* 186 */     MedicineZbForm cineZbForm = (MedicineZbForm)form;
+/* 187 */     String[] ids = cineZbForm.getSelectNos();
+/*     */     try {
+/* 189 */       if (log.isDebugEnabled()) log.debug("delete data or change data's status to delete.");
+/* 190 */       getCineZbServices().delete(ids);
+/*     */     } catch (Exception localException) {
+/*     */     }
+/* 193 */     return list(mapping, form, request, response);
+/*     */   }
+/*     */ 
+/*     */   public ActionForward toDetail(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 203 */     if (log.isDebugEnabled()) log.debug("get actionForm object.");
+/* 204 */     MedicineZbForm cineZbForm = (MedicineZbForm)form;
+/* 205 */     String id = cineZbForm.getSelectNos()[0];
+/* 206 */     if (log.isDebugEnabled()) log.debug("get data detail by id=" + id + ".");
+/* 207 */     MedicineZbBO cineZbBO = getCineZbServices().findById(Integer.valueOf(id));
+/* 208 */     if (log.isDebugEnabled()) log.debug("set business object.");
+/* 209 */     cineZbForm.setCineZbBO(cineZbBO);
+/* 210 */     return mapping.findForward("toDetail");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward MakeSuppliersResult(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 218 */     return mapping.findForward("reslutList");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward resultList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 225 */     String medicineId = request.getParameter("medicineId");
+/* 226 */     String medicineName = request.getParameter("medicineName");
+/* 227 */     String beginDate = request.getParameter("beginDate");
+/* 228 */     Map map1 = new HashMap();
+/* 229 */     map1.put("medicineId", medicineId);
+/* 230 */     map1.put("beginDate", beginDate);
+/* 231 */     List customerVipList = getOmerVipServices().findVipCustomer(map1);
+/*     */ 
+/* 233 */     request.setAttribute("medicineName", medicineName);
+/* 234 */     request.setAttribute("customerVipList", customerVipList);
+/*     */ 
+/* 236 */     MedicineZbForm cineZbForm = (MedicineZbForm)form;
+/* 237 */     getCineZbServices().setRequest(request);
+/* 238 */     Map map = Operate.describe(cineZbForm);
+/* 239 */     map.put("beginDate", beginDate);
+/* 240 */     map.put("medicineId", medicineId);
+/* 241 */     List reslutList = getCineZbServices().checkZbMedicine(map);
+/* 242 */     if ((reslutList != null) && (reslutList.size() > 0)) {
+/* 243 */       MedicineZbBO medicineZbBO = (MedicineZbBO)reslutList.get(0);
+/* 244 */       if (!"1".equals(medicineZbBO.getAuthState())) {
+/* 245 */         medicineZbBO.setZbState("1");
+/* 246 */         getCineZbServices().updateZbState(medicineZbBO);
+/*     */       }
+/*     */     }
+/* 249 */     request.setAttribute("beginDate", beginDate);
+/* 250 */     request.setAttribute("medicineId", medicineId);
+/* 251 */     request.setAttribute("reslutList", reslutList);
+/* 252 */     return mapping.findForward("reslutList");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward resultForCg(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 258 */     return mapping.findForward("resultForCg");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward resultForCgList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 265 */     String medicineId = request.getParameter("medicineId");
+/* 266 */     String medicineName = request.getParameter("medicineName");
+/* 267 */     String beginDate = request.getParameter("beginDate");
+/*     */ 
+/* 271 */     Map maps = new HashMap();
+/* 272 */     maps.put("medicineId", medicineId);
+/* 273 */     maps.put("beginDate", beginDate);
+/* 274 */     List zbList = getZbServices().findZbCustomer(maps);
+/* 275 */     request.setAttribute("zbList", zbList);
+/*     */  PageInfo pageInfo = new PageInfo();
+/* 277 */     MedicineZbForm cineZbForm = (MedicineZbForm)form;
+/* 278 */     getCineZbServices().setRequest(request);
+/* 279 */     Map map = Operate.describe(cineZbForm);
+/* 280 */     map.put("beginDate", beginDate);
+/* 281 */     map.put("medicineId", medicineId);
+/* 282 */     List reslutList = getCineZbServices().resultForCg(map,pageInfo);
+/* 283 */     request.setAttribute("medicineId", medicineId);
+/* 284 */     request.setAttribute("medicineName", medicineName);
+/* 285 */     request.setAttribute("beginDate", beginDate);
+/* 286 */     request.setAttribute("reslutList", reslutList);
+				request.setAttribute("pageInfo", pageInfo);
+/* 287 */     return mapping.findForward("resultForCg");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward resultForSuppliers(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 293 */     return mapping.findForward("resultForSuppliers");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward resultForSuppliersList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 302 */     String beginDate = request.getParameter("beginDate");
+/*     */ 
+/* 304 */     UserBO userBO = (UserBO)request.getSession().getAttribute("Logon.User");
+/* 305 */     if (userBO != null) {
+/* 306 */       String customerAccount = userBO.getLoginName();
+/* 307 */       MedicineZbForm cineZbForm = (MedicineZbForm)form;
+/* 308 */       getCineZbServices().setRequest(request);
+/* 309 */       Map map = Operate.describe(cineZbForm);
+/* 310 */       map.put("beginDate", beginDate);
+/* 311 */       map.put("customerAccount", customerAccount);
+/*     */ 
+/* 313 */       List reslutList = getCineZbServices().resultForSuppliers(map);
+/*     */ 
+/* 316 */       request.setAttribute("beginDate", beginDate);
+/* 317 */       request.setAttribute("reslutList", reslutList);
+/*     */     }
+/* 319 */     return mapping.findForward("resultForSuppliers");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward sureZB(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 326 */     String medicineId = request.getParameter("medicineId");
+/* 327 */     String medicineName = request.getParameter("medicineName");
+/* 328 */     String beginDate = request.getParameter("beginDate");
+/*     */ 
+/* 330 */     MedicineZbForm cineZbForm = (MedicineZbForm)form;
+/* 331 */     String id = cineZbForm.getSelectNos()[0];
+/* 332 */     String[] a = id.split(",");
+/* 333 */     String date = request.getParameter("date");
+/* 334 */     if ((date != null) && (date != "")) {
+/* 335 */       if ("customer".equals(a[0])) {
+/* 336 */         VipzbBO zbBO = new VipzbBO();
+/* 337 */         zbBO.setCustomerId(Integer.valueOf(a[1]));
+/* 338 */         zbBO.setMedicineId(Integer.valueOf(a[2]));
+/* 339 */         zbBO.setBeginDate(date);
+/*     */         try {
+/* 341 */           VipzbBO bO = getZbServices().findByMc(zbBO);
+/* 342 */           if (bO != null)
+/*     */           {
+/* 344 */             getZbServices().update(zbBO);
+/*     */ 
+/* 346 */             getZbServices().updateOne(zbBO);
+/*     */ 
+/* 348 */             getCineZbServices().updateZbStateFq(medicineId, beginDate);
+/*     */           }
+/*     */           else {
+/* 351 */             getZbServices().update(zbBO);
+/*     */ 
+/* 353 */             zbBO.setState("1");
+/* 354 */             getZbServices().insert(zbBO);
+/*     */           }
+/* 356 */           request.setAttribute("exception.message", "中标成功！");
+/*     */         } catch (Exception e) {
+/* 358 */           ExceptionUtils.getFullStackTrace(e);
+/*     */         }
+/*     */       }
+/*     */       else {
+/* 362 */         MedicineZbBO cineZbBO = new MedicineZbBO();
+/* 363 */         cineZbBO.setZbId(Integer.valueOf(a[0]));
+/*     */         try
+/*     */         {
+/* 366 */           VipzbBO vipzbBO = new VipzbBO();
+/* 367 */           vipzbBO.setCustomerId(Integer.valueOf(a[1]));
+/* 368 */           vipzbBO.setMedicineId(Integer.valueOf(a[2]));
+/* 369 */           vipzbBO.setBeginDate(a[3].trim());
+/* 370 */           getZbServices().update(vipzbBO);
+/*     */ 
+/* 372 */           getCineZbServices().updateZbStateFq(a[2], beginDate);
+/*     */ 
+/* 374 */           getCineZbServices().updateZbState(cineZbBO);
+/* 375 */           request.setAttribute("exception.message", "中标成功！");
+/*     */         } catch (Exception e) {
+/* 377 */           ExceptionUtils.getFullStackTrace(e);
+/*     */         }
+/*     */       }
+/*     */     }
+/*     */     else {
+/* 382 */       request.setAttribute("exception.message", "中标失败！请选择正确投标起始日！");
+/*     */     }
+/* 384 */     request.setAttribute("medicineName", medicineName);
+/* 385 */     request.setAttribute("beginDate", beginDate);
+/* 386 */     request.setAttribute("medicineId", medicineId);
+/* 387 */     return resultList(mapping, form, request, response);
+/*     */   }
+/*     */ 
+/*     */   public ActionForward sureLB(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 394 */     String medicineId = request.getParameter("medicineId");
+/* 395 */     String medicineName = request.getParameter("medicineName");
+/* 396 */     String beginDate = request.getParameter("beginDate");
+/*     */ 
+/* 398 */     MedicineZbForm cineZbForm = (MedicineZbForm)form;
+/* 399 */     String date = request.getParameter("date");
+/* 400 */     if ((date != null) && (date != ""))
+/*     */     {
+/* 402 */       VipzbBO zbBO = new VipzbBO();
+/*     */ 
+/* 404 */       zbBO.setMedicineId(Integer.valueOf(medicineId));
+/* 405 */       zbBO.setBeginDate(date);
+/*     */ 
+/* 407 */       getZbServices().update(zbBO);
+/*     */ 
+/* 409 */       getCineZbServices().updateZbStateFq(medicineId, beginDate);
+/*     */ 
+/* 411 */       getCineZbServices().updateZbAuthState(medicineId, beginDate);
+/* 412 */       request.setAttribute("exception.message", "流标成功！");
+/*     */     }
+/*     */     else
+/*     */     {
+/* 416 */       request.setAttribute("exception.message", "流标失败！请选择正确投标起始日！");
+/*     */     }
+/* 418 */     request.setAttribute("medicineName", medicineName);
+/* 419 */     request.setAttribute("beginDate", beginDate);
+/* 420 */     request.setAttribute("medicineId", medicineId);
+/* 421 */     return resultList(mapping, form, request, response);
+/*     */   }
+/*     */ 
+/*     */   public ActionForward toContract(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 427 */     return mapping.findForward("toContract");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward downLoad(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 440 */     String RELATIVELY_PATH = "D:/";
+/* 441 */     String fileName = "HT.doc";
+/* 442 */     File file = new File(RELATIVELY_PATH, fileName);
+/* 443 */     if (file.exists()) {
+/* 444 */       InputStream ins = new FileInputStream(file);
+/* 445 */       byte[] b = new byte[ins.available()];
+/* 446 */       int bytesRead = 0;
+/* 447 */       bytesRead = ins.read(b, 0, b.length);
+/* 448 */       response.addHeader("content-type", "application/doc");
+/* 449 */       response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
+/* 450 */       response.getOutputStream().write(b, 0, b.length);
+/*     */     }
+/*     */ 
+/* 453 */     return null;
+/*     */   }
+/*     */ 
+/*     */   public ActionForward toTqjb(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 460 */     return mapping.findForward("tqjb");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward Tqjb(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 467 */     String beginDate = request.getParameter("beginDate");
+/*     */ 
+/* 470 */     MedicineZbForm cineZbForm = (MedicineZbForm)form;
+/* 471 */     getCineZbServices().setRequest(request);
+/* 472 */     Map map = Operate.describe(cineZbForm);
+/* 473 */     map.put("beginDate", beginDate);
+/* 474 */     List reslutList = getCineZbServices().tqjb(map);
+/* 475 */     request.setAttribute("beginDate", beginDate);
+/* 476 */     request.setAttribute("reslutList", reslutList);
+/* 477 */     return mapping.findForward("resultForCg");
+/*     */   }
+
+		public ActionForward resultForCgWindowList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+			     throws Exception
+			   {
+			     String medicineId = request.getParameter("medicineId");
+			     String medicineName = request.getParameter("medicineName");
+			     String beginDate = request.getParameter("beginDate");
+			 	 PageInfo pageInfo = new PageInfo();
+			     Map maps = new HashMap();
+			     maps.put("medicineId", medicineId);
+			     maps.put("beginDate", beginDate);
+			     List zbList = getZbServices().findZbCustomer(maps);
+			     request.setAttribute("zbList", zbList);
+			 
+			     MedicineZbForm cineZbForm = (MedicineZbForm)form;
+			     getCineZbServices().setRequest(request);
+			     Map map = Operate.describe(cineZbForm);
+			     map.put("beginDate", beginDate);
+			     map.put("medicineId", medicineId);
+			     List reslutList = getCineZbServices().resultForCg(map,pageInfo);
+			     request.setAttribute("medicineId", medicineId);
+			     request.setAttribute("medicineName", medicineName);
+			     request.setAttribute("beginDate", beginDate);
+			     request.setAttribute("reslutList", reslutList);
+					request.setAttribute("pageInfo", pageInfo);
+			     return mapping.findForward("resultForCgWindow");
+			   }
+		
+
+/*     */ }
+
+/* Location:           D:\李慧医药项目\tcmages\krt\WEB-INF\classes\
+ * Qualified Name:     cn.krt.zbcg.system.web.action.MedicineZbAction
+ * JD-Core Version:    0.6.2
+ */

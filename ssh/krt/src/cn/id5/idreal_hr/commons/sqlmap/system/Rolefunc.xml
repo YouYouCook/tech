@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="GBOSS_S_T_ROLE_FUNC" >
+  <resultMap id="abatorgenerated_STRoleFuncResult" class="cn.id5.idreal_hr.commons.bo.system.RoleFuncBO" >
+ 
+    <result column="FUNC_ID" property="funcId" jdbcType="long" />
+    <result column="ROLE_ID" property="roleId" jdbcType="long" />
+  </resultMap>
+  <select id="getResourcesByFuncId" parameterClass="cn.id5.idreal_hr.commons.bo.system.RoleFuncBO" resultClass="cn.id5.idreal_hr.commons.bo.system.FuncBO">
+	      select * from S_T_ROLE_FUNC r where r.FUNC_ID=#funcId# and r.ROLE_ID=#roleId#      
+  </select>
+  <insert id="insert" parameterClass="cn.id5.idreal_hr.commons.bo.system.RoleFuncBO" >
+	  insert into S_T_ROLE_FUNC (FUNC_ID, ROLE_ID)
+	  values (#funcId#,#roleId#)
+	</insert>
+	<insert id="delete" parameterClass="cn.id5.idreal_hr.commons.bo.system.RoleFuncBO" >
+	 delete from S_T_ROLE_FUNC where FUNC_ID=#funcId# and ROLE_ID=#roleId# 
+	</insert>
+	<select id="deleteRoleId" parameterClass="cn.id5.idreal_hr.commons.bo.system.RoleFuncBO" resultClass="cn.id5.idreal_hr.commons.bo.system.RoleFuncBO">
+	 select * from S_T_ROLE_FUNC where ROLE_ID=#roleId# 
+	</select>
+</sqlMap>

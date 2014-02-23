@@ -1,0 +1,260 @@
+package cn.krt.zbcg.system.web.action;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.ssi.common.Operate;
+import org.ssi.common.PageInfo;
+import org.ssi.struts.action.SSIDispatchAction;
+
+import cn.krt.zbcg.commons.bo.system.CustomerBO;
+import cn.krt.zbcg.commons.bo.system.MedicineBO;
+import cn.krt.zbcg.commons.bo.system.ShqBO;
+import cn.krt.zbcg.commons.bo.system.StorageBO;
+import cn.krt.zbcg.system.services.ICustomerServices;
+import cn.krt.zbcg.system.services.IMedicineServices;
+import cn.krt.zbcg.system.services.IShqdServices;
+import cn.krt.zbcg.system.services.IStorageService;
+import cn.krt.zbcg.system.web.form.MedicineForm;
+import cn.krt.zbcg.system.web.form.ShqdForm;
+import cn.krt.zbcg.system.web.form.StorageForm;
+
+public class StorageAction   extends SSIDispatchAction{
+	IStorageService storageService;
+	IShqdServices iShqService;
+	private ICustomerServices customerServices;
+	private ICustomerServices getCustomerServices() {
+		if (this.customerServices == null) {
+			this.customerServices = ((ICustomerServices) getBean("customerServices"));
+		}
+		return this.customerServices;
+	}
+	public void setCustomerServices(ICustomerServices customerServices) {
+		this.customerServices = customerServices;
+	}
+	public IShqdServices getiShqService() {
+		if (this.iShqService == null) {
+			this.iShqService = ((IShqdServices) getBean("iShqService"));
+		}
+		return this.iShqService;
+	}
+	private IMedicineServices medicineServices;
+	private IMedicineServices getMedicineServices() {
+		if (this.medicineServices == null) {
+			this.medicineServices = ((IMedicineServices) getBean("medicineServices"));
+		}
+		return this.medicineServices;
+	}
+	public void setiShqService(IShqdServices iShqService) {
+		this.iShqService = iShqService;
+	}
+
+	public void setMedicineServices(IMedicineServices medicineServices) {
+		this.medicineServices = medicineServices;
+	}
+	public IStorageService getStorageService() {
+	    if (this.storageService == null) {
+		      this.storageService = ((IStorageService)getBean("storageServices"));
+		    }
+			     return this.storageService;
+	}
+
+	public void setStorageService(IStorageService storageService) {
+		this.storageService = storageService;
+	}
+	public ActionForward listdaiyanxinxi(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response){
+		StorageForm storageForm = (StorageForm) form;
+		StorageBO storageBO  = storageForm.getStorageBO();
+		PageInfo pageInfo = new PageInfo();
+		getStorageService().setRequest(request);
+		List storageList = getStorageService().findDaiyanPhao(pageInfo);
+		String sumShuliang = getStorageService().findDaiyansunshuliang();
+		request.setAttribute("storageList", storageList);
+		request.setAttribute("sumshuliang", sumShuliang);
+		request.setAttribute("pageInfo", pageInfo);
+		request.setAttribute("title", "待验信息");
+		request.setAttribute("ptitle", "待验数量和");
+		return mapping.findForward("daiyan");
+	}
+	public ActionForward listbuhege(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response){
+		StorageForm storageForm = (StorageForm) form;
+		StorageBO storageBO  = storageForm.getStorageBO();
+		PageInfo pageInfo = new PageInfo();
+		getStorageService().setRequest(request);
+		List storageList = getStorageService().findBuhegePumber(pageInfo);
+		String sumShuliang = getStorageService().findBuhegeShuliang();
+		request.setAttribute("storageList", storageList);
+		request.setAttribute("sumshuliang", sumShuliang);
+		request.setAttribute("title", "不合格信息");
+		request.setAttribute("ptitle", "不合格数量和");
+		request.setAttribute("pageInfo", pageInfo);
+		return mapping.findForward("daiyan");
+	}
+	
+	public ActionForward zllist(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		StorageForm storageForm = (StorageForm) form;
+		StorageBO storageBO  = storageForm.getStorageBO();
+		String checkresult = storageBO.getCheckresult();
+		PageInfo pageInfo = new PageInfo();
+		getStorageService().setRequest(request);
+		Map map = Operate.describe(storageForm);
+		map.put("checkresult", checkresult);
+		List medicineList = getStorageService().findAll(pageInfo, map);
+		request.setAttribute("storageList", medicineList);
+		request.setAttribute("pageInfo", pageInfo);
+
+		return mapping.findForward("zlstorageList");
+	}
+	
+	public ActionForward list(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		StorageForm storageForm = (StorageForm) form;
+		StorageBO storageBO  = storageForm.getStorageBO();
+		String checkresult = storageBO.getCheckresult();
+		PageInfo pageInfo = new PageInfo();
+		getStorageService().setRequest(request);
+		Map map = Operate.describe(storageForm);
+		map.put("checkresult", checkresult);
+		List medicineList = getStorageService().findAll(pageInfo, map);
+		request.setAttribute("storageList", medicineList);
+		request.setAttribute("pageInfo", pageInfo);
+
+		return mapping.findForward("storageList");
+	}
+	
+	public ActionForward shqdtoUpdate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		StorageForm storageForm = (StorageForm) form;
+	    String ids = storageForm.getSelectNos()[0];
+	    String[] a = ids.split(",");
+	    String id = a[0].trim();
+	    ShqBO shqbo = getiShqService().findById(Integer.valueOf(Integer.parseInt(id)));
+		CustomerBO custom = null;
+		MedicineBO medicine = null;
+		if (shqbo.getSupplyid() == null) {
+				custom = new CustomerBO();
+		} else {
+			int supplyid = shqbo.getSupplyid();
+			custom = getCustomerServices().findById(supplyid);
+	   }
+	   if(shqbo.getPinzhongid()==null){
+		   medicine  = new MedicineBO();
+	   }else{
+		    int pinzhongid =  shqbo.getPinzhongid();
+		     medicine =  getMedicineServices().findById(pinzhongid);
+	   }
+	    request.setAttribute("custom", custom);
+	    request.setAttribute("medicine", medicine);
+	    request.setAttribute("shqbo", shqbo);
+	    return mapping.findForward("shqdtoUpdate");
+	}
+	public ActionForward shqd2storage(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		StorageForm storageForm = (StorageForm) form;
+		PageInfo pageInfo = new PageInfo();
+		Map map = Operate.describe(storageForm);
+		List ishqList = getiShqService().findAll(pageInfo, map);
+		request.setAttribute("shqdlist", ishqList);
+		request.setAttribute("pageInfo", pageInfo);
+		return mapping.findForward("shqd2storage");
+	}
+	  public ActionForward toAdd(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+			    throws Exception  {
+			    return mapping.findForward("toAdd");
+		 }
+		public ActionForward add(ActionMapping mapping, ActionForm form,
+				HttpServletRequest request, HttpServletResponse response)
+				throws Exception {
+			StorageForm storageForm = (StorageForm) form;
+			StorageBO storageBo =storageForm.getStorageBO();
+			try {
+				getStorageService().insert(storageBo);
+				request.setAttribute("exception.message", "增加成功！");
+			} catch (Exception e) {
+				request.setAttribute("exception.message", "添加失败");
+				ExceptionUtils.getFullStackTrace(e);
+				   e.printStackTrace();
+			}
+			return list(mapping, form, request, response);
+		}
+		
+		  public ActionForward zltoUpdate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+				    throws Exception
+				  {
+			  		StorageForm storageForm = (StorageForm) form;
+				    String ids = storageForm.getSelectNos()[0];
+				    String[] a = ids.split(",");
+				    String id = a[0].trim();
+				    StorageBO storageBo = getStorageService().findById(Integer.valueOf(Integer.parseInt(id)));
+				    request.setAttribute("storageBO", storageBo);
+				    return mapping.findForward("zltoUpdate");
+				  }
+
+
+				  public ActionForward zlupdate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+				    throws Exception
+				  {
+					StorageForm storageForm = (StorageForm) form;
+					StorageBO storageBo =storageForm.getStorageBO();
+				    try {
+				    	getStorageService().update(storageBo);
+				    } catch (Exception e) {
+				      ExceptionUtils.getFullStackTrace(e);
+				      e.printStackTrace();
+				    }
+				    request.setAttribute("exception.message", "修改信息成功！");
+				    return zllist(mapping, form, request, response);
+				  }
+	  public ActionForward toUpdate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+			    throws Exception
+			  {
+		  		StorageForm storageForm = (StorageForm) form;
+			    String ids = storageForm.getSelectNos()[0];
+			    String[] a = ids.split(",");
+			    String id = a[0].trim();
+			    StorageBO storageBo = getStorageService().findById(Integer.valueOf(Integer.parseInt(id)));
+			    request.setAttribute("storageBO", storageBo);
+			    return mapping.findForward("toUpdate");
+			  }
+
+
+			  public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+			    throws Exception
+			  {
+				StorageForm storageForm = (StorageForm) form;
+				StorageBO storageBo =storageForm.getStorageBO();
+			    try {
+			    	getStorageService().update(storageBo);
+			    } catch (Exception e) {
+			      ExceptionUtils.getFullStackTrace(e);
+			      e.printStackTrace();
+			    }
+			    request.setAttribute("exception.message", "修改信息成功！");
+			    return list(mapping, form, request, response);
+			  }
+			   public ActionForward toDelete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+					     throws Exception
+					   {
+				   StorageForm storageForm = (StorageForm) form;
+					     String[] ids = storageForm.getSelectNos();
+					     try {
+					    	 getStorageService().delete(ids);
+					     } catch (Exception localException) {
+					     }
+					     return list(mapping, form, request, response);
+					   }
+}

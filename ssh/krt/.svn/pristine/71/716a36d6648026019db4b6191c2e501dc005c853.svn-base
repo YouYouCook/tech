@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+	<sqlMap namespace="GBOSS_S_T_CODE_GROUP" >
+	  <resultMap id="CodeGroupResult" class="cn.id5.idreal_hr.commons.bo.system.CodeGroupBO" >
+	 <!--
+     	代码组对象映射信息
+      -->
+	    <result column="CG_CODE" property="cgCode" jdbcType="VARCHAR" />
+	    <result column="CG_NAME" property="cgName" jdbcType="VARCHAR" />
+	    <result column="CG_INFO" property="cgInfo" jdbcType="VARCHAR" />
+	    <result column="CG_NO" property="cgNo" jdbcType="VARCHAR" />
+	    
+	  </resultMap>
+  	<!-- 
+	     功能说明：根据代码组编号查询信息
+	     作者：    WangYunLong  
+	     日期：    2010-03-04
+	-->
+  <select id="selectByPrimaryKey" resultMap="CodeGroupResult" parameterClass="cn.id5.idreal_hr.commons.bo.system.CodeGroupBO" >
+    SELECT 
+    	   CG_CODE, 
+    	   CG_NAME, 
+    	   CG_INFO,
+    	   CG_NO 
+    FROM   
+    	   S_T_CODE_GROUP
+    WHERE  
+           CG_CODE = #cgCode#  ORDER BY to_number(CG_NO) DESC
+  </select>
+    <!-- 
+	     功能说明：代码组信息分页查询 iBATIS Sql分页
+	     作者：    WangYunLong  
+	     日期：    2010-03-04
+	-->
+  <select id="selectAll" resultMap="CodeGroupResult" parameterClass="java.util.Map"> 	
+   	SELECT
+   			 * 
+   	FROM 
+   			( SELECT ROWNUM AS NUMROW, c.* from ( select CG_CODE, CG_NAME, CG_INFO,CG_NO
+    FROM 
+    		S_T_CODE_GROUP WHERE 1=1 
+			<isNotNull property="cgCode">
+				<isNotEmpty  property="cgCode">
+				and CG_CODE like '%$cgCode$%'
+				</isNotEmpty> 
+			</isNotNull>
+			<isNotNull property="cgName">
+				<isNotEmpty  property="cgName">
+				and CG_NAME like '%$cgName$%'
+				</isNotEmpty>
+			</isNotNull> 
+			ORDER BY to_number(CG_NO) DESC
+   			 ) c)    
+   			<![CDATA[
+    
+   WHERE 
+    		NUMROW >= $ibegin$  AND NUMROW < $iend$	
+   			]]>   	
+  </select>
+  <!-- 
+	     功能说明：代码组信息分页记录 iBATIS Sql分页
+	     作者：    WangYunLong  
+	     日期：    2010-03-04
+	-->
+  <select id="selectAllOfCount" resultClass="java.lang.String" parameterClass="java.util.Map">
+     SELECT 
+     		count(1) as ID 
+     FROM 
+     		S_T_CODE_GROUP 
+     WHERE 
+     		1=1 
+			<isNotNull property="cgCode">
+				<isNotEmpty  property="cgCode">
+				and CG_CODE like '%$cgCode$%'
+				</isNotEmpty>
+			</isNotNull>
+			<isNotNull property="cgName">
+				<isNotEmpty  property="cgName">
+				and CG_NAME like '%$cgName$%'
+				</isNotEmpty>
+			</isNotNull>
+			ORDER BY CG_NO DESC
+  </select>
+  
+  <!-- 
+	     功能说明：添加代码组信息
+	     作者：    WangYunLong  
+	     日期：    2010-03-04
+	-->
+  <insert id="insert" parameterClass="cn.id5.idreal_hr.commons.bo.system.CodeGroupBO" >
+	
+    INSERT INTO	
+    			 S_T_CODE_GROUP (CG_CODE, CG_NAME, CG_INFO,CG_NO)
+    VALUES 
+    			(#cgCode#, #cgName#, #cgInfo#,#cgNo#)
+  </insert>
+  <!-- 
+	     功能说明：更新代码组信息
+	     作者：    WangYunLong  
+	     日期：    2010-03-04
+	-->
+ <update id="update" parameterClass="cn.id5.idreal_hr.commons.bo.system.CodeGroupBO" >
+    UPDATE 
+    			S_T_CODE_GROUP 
+    SET 
+      			CG_NAME = #cgName#,
+     			CG_INFO = #cgInfo#
+    WHERE 
+    			CG_CODE = #cgCode#
+  </update>
+  
+  <!-- 
+	     功能说明：更新代码组信息
+	     作者：    WangYunLong  
+	     日期：    2010-03-04
+	-->
+ <update id="delete" parameterClass="cn.id5.idreal_hr.commons.bo.system.CodeGroupBO" >
+    DELETE 	FROM S_T_CODE_GROUP  WHERE CG_CODE = #cgCode# 
+  </update>
+  <select id="selectByCgNo" resultMap="CodeGroupResult" parameterClass="cn.id5.idreal_hr.commons.bo.system.CodeGroupBO" >
+    SELECT 
+    	   CG_CODE, 
+    	   CG_NAME, 
+    	   CG_INFO,
+    	   CG_NO 
+    FROM   
+    	   S_T_CODE_GROUP
+    WHERE  
+           CG_NO = '$cgNo$'
+  </select>
+</sqlMap>

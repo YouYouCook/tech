@@ -1,0 +1,189 @@
+<%@ page language="java"  pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/ssi.tld" prefix="ssi"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>供应商录中标结果-列表</title>
+<link href="<%=request.getContextPath()%>/styles/gzt_css.css" rel="stylesheet" type="text/css" />
+<script language="javascript" src="<%=request.getContextPath()%>/js/control.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/commons.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/date/common.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/formcheck.js"></script>
+<script language="javascript" src="<%=request.getContextPath()%>/js/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<jsp:include page="/common/exception.jsp" flush="true" />
+<html:form 	method="post" action="/MedicineZbAction.do?operate=resultForCg">
+<input id="medicineId" type="hidden" name="medicineId" value="${medicineId}">
+<div class="weizhi">
+<div class="weizhi_bj">采购部查看招标结果</div>
+<div class="weizhi_ss"><img id="controlSearchBtn" style="cursor:pointer" onclick="loadHiddenPage('<%=request.getContextPath()%>');" src="<%=request.getContextPath()%>/images/button_minus.gif" width="66" height="17" /></div>
+</div>
+</div>
+<table border="0" cellspacing="0" cellpadding="0" class="table_chax" id="adSearch">
+  <tr>
+    <th width="12%">品名：</th>
+    <td width="20%"><input type="text" id="medicineName" readonly="true"   name="medicineName" value="${medicineName}" title="品名"/><input name="button" type="button" value="查询" onclick="openwinMedicine();" /></td>
+    <th>投标起始日：</th>
+    <td colspan="3"><input type="text" id="beginDate" name="beginDate" value="${beginDate}"  size="6" title="投标起始日" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="Wdate" readonly="true"/>
+	</td>
+    <th><input name="checks"  type="button" value="查询" onclick="checka()"/></th>
+    <td></td>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" class="table_list">
+  <tr>
+    <th width="15%">VIP供应商中标结果信息</th>
+    <th width="85%">
+	<div>
+	</div>
+	</th>
+  </tr>
+  </br>
+  
+  <tr>
+    <td colspan="2">
+		<table border="0" cellpadding="0" cellspacing="0" class="table_date" id="dataTable">
+		  <tr>
+		  	<th width="1%">品名</th>
+			<th width="4%">中标VIP供应商</th>
+		  </tr>
+		  <logic:present name="zbList">
+							<logic:notEmpty name="zbList">
+								<logic:iterate id="item" name="zbList" indexId="indexNo">
+									<tr onmouseover="this.className='over'" onmouseout="this.className='out'" onclick="showInfo(<bean:write name="indexNo"/>,this);">
+										<td><div ><bean:write name="item" property="medicineBO.medicineName" /></div></td>
+										<td><div ><bean:write name="item" property="customerBO.name" /></div></td>										
+									</tr>
+								</logic:iterate>
+							</logic:notEmpty>
+						</logic:present>
+		 		</table>
+		 </td>
+	</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" class="table_list">
+  <tr>
+    <th width="15%">查看供应商中标结果信息</th>
+    <th width="85%">
+	<div>
+	</div>
+	</th>
+  </tr>
+  </br>
+  
+  <tr>
+    <td colspan="2">
+		<table border="0" cellpadding="0" cellspacing="0" class="table_date" id="dataTable">
+		  <tr>
+			<th>品名</th>
+			<th>供应商代码</th>
+			<th width="10%">供应商</th>
+			<th width="9%">样品序列号</th>
+			<th width="7%">计划采购数量</th>
+			<!-- <th>样品截止时间</th> -->
+			<th width="7%">联系人</th>
+			<th>手机</th>
+			<th>电话</th>
+			<!-- <th>电子邮件</th> -->
+			<th width="6%">原料产地</th>
+			<th width="8%">金额</th>
+			<th width="5%">单价</th>
+			<th>备注</th>
+		  </tr>
+		  <logic:present name="reslutList">
+							<logic:notEmpty name="reslutList">
+								<logic:iterate id="item" name="reslutList" indexId="indexNo">
+									<tr onmouseover="this.className='over'" onmouseout="this.className='out'" onclick="showInfo(<bean:write name="indexNo"/>,this);">
+										<td><div>
+										<bean:write name="item" property="medicineJbBO.medicineCgBO.medicineBO.medicineName" />
+										</div></td>
+										<td><div>
+										<logic:notEmpty  name="item" property="medicineJbBO.customerBO"> 
+											<bean:write name="item" property="medicineJbBO.customerBO.customerAccount" />
+										</logic:notEmpty>
+										</div></td>
+										<td><div>
+											<logic:notEmpty   name="item"  property="medicineJbBO.customerBO"> 
+											<bean:write name="item" property="medicineJbBO.customerBO.name" />
+										</logic:notEmpty>
+										
+										</div></td>
+										<td><div><bean:write name="item" property="medicineJbBO.medicineCode" /></div></td>
+										<td><div><bean:write name="item" property="medicineJbBO.medicineCgBO.cgQty" /></div></td>
+										<!-- <td><div><bean:write name="item" property="medicineJbBO.medicineCgBO.reachDate" /></div></td> -->
+										<td><div>
+											<logic:notEmpty   name="item"   property="medicineJbBO.customerBO"> 
+													<bean:write name="item" property="medicineJbBO.customerBO.lxr" />
+										</logic:notEmpty>
+										</div></td>
+										<td><div>
+											<logic:notEmpty   name="item"   property="medicineJbBO.customerBO"> 
+												<bean:write name="item" property="medicineJbBO.customerBO.telephone" />
+										</logic:notEmpty>
+										</div></td>
+										<td><div>
+											<logic:notEmpty    name="item"   property="medicineJbBO.customerBO"> 
+											<bean:write name="item" property="medicineJbBO.customerBO.phone" />
+										</logic:notEmpty>
+										</div></td>
+										<td><div><bean:write name="item" property="medicineJbBO.ylcd" /></div></td>
+										<td><div>${item.medicineJbBO.medicineCgBO.cgQty*item.medicineJbBO.price }</div></td>
+										<td><div><bean:write name="item" property="medicineJbBO.price" /></div></td>
+										<td><div STYLE="width: 120px; height: 20px; border: 0px solid blue;overflow: hidden; text-overflow:ellipsis" onmouseover="this.style.cssText='overflow:visible'" onmouseout="this.style.cssText='width:120px;height: 20px;border: 0px solid blue;overflow:hidden;text-overflow:ellipsis'"><bean:write name="item" property="remark" /></div></td>
+									</tr>
+								</logic:iterate>
+							</logic:notEmpty>
+						</logic:present>
+		 	</table>
+		 </td>
+	</tr>
+	
+	<tr>
+    <td height="40" colspan="2">
+	<div>
+					<logic:present name="list">
+							<logic:empty name="list">
+								<div style="text-align:center; height:30px; line-height:30px;">暂无记录！</div>
+							</logic:empty>
+					</logic:present>
+					
+					<ssi:page property="pageInfo"  action="/MedicineZbAction.do?operate=resultForCgList"/>
+	</div>
+	</td>
+  </tr>
+</table>
+</html:form>
+</body>
+</html>
+<script language="javascript">
+ function openwinMedicine()
+    { 
+    	var returnValue=window.showModalDialog("<%=request.getContextPath()%>/medicineManage.do?operate=windowlist",window, "dialogWidth:700px,dialogHeight:335px,dialogTop:200px,dialogLeft,200px ");
+    	if (returnValue == undefined) {
+            returnValue = window.returnValue;
+        }
+    	if(returnValue && returnValue!=""){
+ 			
+	 	  	var  ret =returnValue.split(',');
+	 	   	document.getElementById("medicineName").value =ret[0];
+	 	   	document.getElementById("medicineId").value=ret[1];
+	 	   	
+ 		}
+  	}
+  	
+  	function checka(){
+  	if(checkSubmit(document.medicineZbForm)){
+  			//var medicineName=document.getElementById("medicineName").value;
+	  	 	//var cgDate=document.getElementById("cgDate").value;
+	  	 	//if(medicineName == ""){alert("品名不能为空！");return false;}
+	  	 	//if(cgDate == ""){alert("采购期不能为空！");return false;}
+			document.medicineZbForm.action="MedicineZbAction.do?operate=resultForCgList";
+			document.medicineZbForm.submit();
+	}
+	}
+</script> 

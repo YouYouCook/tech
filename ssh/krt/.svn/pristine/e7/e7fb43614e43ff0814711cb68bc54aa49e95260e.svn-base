@@ -1,0 +1,214 @@
+<%@ page language="java" contentType="text/html;charset=UTF-8" import="java.util.*"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>用户管理-列表</title>
+<link href="<%=request.getContextPath()%>/styles/jquery.lightTreeview.css" rel="stylesheet" type="text/css" />
+<script language="javascript" src="<%=request.getContextPath()%>/js/commons.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.2.6.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.lightTreeview.pack.js"></script>
+</head>
+<body>
+
+<div class="left">
+	<div class="left_mbj"></div>
+<ul id="demo3" style="width:186px; margin:0px;">
+	<c:if test="${sessionScope['Logon.User'].loginRole ==1}">
+		<!-- 最外层开始 -->
+		<li style="list-style:none; margin:0px;">
+		<div class="treeview-folder">系统管理</div> 
+		<!-- 展开display:block; -->
+		<ul style="display:none">
+		
+		<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/user.do?operate=list" target="rightFrame"><div class="treeview-file">系统账号管理</div></a></li>
+		<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/supplier.do?operate=list" target="rightFrame"><div class="treeview-file">供应商信息管理</div></a></li>
+		<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/supplier.do?operate=oodlist" target="rightFrame"><div class="treeview-file">查询即将过期供应商</div></a></li>
+		<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/vip.do?operate=list" target="rightFrame"><div class="treeview-file">vip供应商管理</div></a></li>
+		<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/medicineManage.do?operate=list" target="rightFrame"><div class="treeview-file">品种维护</div></a></li>
+		<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/notice.do?operate=list" target="rightFrame"><div class="treeview-file">招标公告</div></a></li>
+		<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/MedicineJbAction.do?operate=toTqjb" target="rightFrame"><div class="treeview-file">提前截标</div></a></li>
+		<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/MedicineZbAction.do?operate=MakeSuppliersResult" target="rightFrame"><div class="treeview-file">确认招标结果</div></a></li>
+		</ul>
+		</li>
+<li style="list-style:none; margin:0px;">
+		<div class="treeview-folder">采购部管理</div>
+		<!-- 展开display:block; -->
+		<ul style="display:none">
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/supplier.do?operate=list" target="rightFrame"><div class="treeview-file">供应商信息管理</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/supplier.do?operate=oodlist" target="rightFrame"><div class="treeview-file">查询即将过期供应商</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/MedicineCgAction.do?operate=list" target="rightFrame"><div class="treeview-file">录入招标品种</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/MedicineCgAction.do?operate=getTops" target="rightFrame"><div class="treeview-file">招标信息查询</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/MedicineZbAction.do?operate=resultForCgList" target="rightFrame"><div class="treeview-file">查看中标结果</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/zhaobiaojinduManage.do?operate=list" target="rightFrame"><div class="treeview-file">原料订货确认</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/shqdHeadManage.do?operate=list" target="rightFrame"><div class="treeview-file">送货清单维护</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/fapiaoManage.do?operate=list" target="rightFrame"><div class="treeview-file">发票信息维护</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/fukuanManage.do?operate=list" target="rightFrame"><div class="treeview-file">付款明细维护</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/zhaobiaojinduManage.do?operate=zhibaolist" target="rightFrame"><div class="treeview-file">质保金维护</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/zhaobiaojinduManage.do?operate=nofinishlist" target="rightFrame"><div class="treeview-file">未完成订单查询</div></a></li>
+			
+		</ul></li>
+
+		<li style="list-style:none; margin:0px;">
+		<div class="treeview-folder">质量部管理</div>
+		<!-- 展开display:block; -->
+		<ul style="display:none">
+					<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/supplier.do?operate=list" target="rightFrame"><div class="treeview-file">供应商信息管理</div></a></li>
+		<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/storageManage.do?operate=zllist" target="rightFrame"><div class="treeview-file">放行维护</div></a></li>
+		<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/supplier.do?operate=oodlist" target="rightFrame"><div class="treeview-file">查询即将过期供应商</div></a></li>
+		
+				
+		</ul></li>
+		
+		
+		<li style="list-style:none; margin:0px;">
+		<div class="treeview-folder">物流部管理</div>
+		<!-- 展开display:block; -->
+		<ul style="display:none">
+				<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/storageManage.do?operate=list" target="rightFrame"><div class="treeview-file">库存维护</div></a></li>
+				<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/storageManage.do?operate=listdaiyanxinxi" target="rightFrame"><div class="treeview-file">待验信息查询</div></a></li>
+				<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/storageManage.do?operate=listbuhege" target="rightFrame"><div class="treeview-file">不合格信息查询</div></a></li>
+				<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/storageManage.do?operate=shqd2storage" target="rightFrame"><div class="treeview-file">从送货清单导入库存</div></a></li>
+		</ul>
+		</li>
+		
+				<li style="list-style:none; margin:0px;">
+		<div class="treeview-folder">财务部管理</div>
+		<!-- 展开display:block; -->
+		<ul style="display:none">
+				<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/zhaobiaojinduManage.do?operate=zhibaolist" target="rightFrame"><div class="treeview-file">质保金维护</div></a></li>
+		</ul>
+		</li>
+		
+			<li style="list-style:none; margin:0px;">
+		<div class="treeview-folder">运营部管理</div>
+		<!-- 展开display:block; -->
+		<ul style="display:none">
+					<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/supplier.do?operate=yylist" target="rightFrame"><div class="treeview-file">供应商信息管理</div></a></li>
+		</ul>
+		</li>
+</ul>		
+</c:if>
+<c:if test="${sessionScope['Logon.User'].loginRole ==2}">
+	<li style="list-style:none; margin:0px;">
+		<div class="treeview-folder">采购部管理</div>
+		<!-- 展开display:block; -->
+		<ul style="display:none">
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/supplier.do?operate=list" target="rightFrame"><div class="treeview-file">供应商信息管理</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/supplier.do?operate=oodlist" target="rightFrame"><div class="treeview-file">查询即将过期供应商</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/MedicineCgAction.do?operate=list" target="rightFrame"><div class="treeview-file">录入招标品种</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/MedicineCgAction.do?operate=getTops" target="rightFrame"><div class="treeview-file">招标信息查询</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/MedicineZbAction.do?operate=resultForCgList" target="rightFrame"><div class="treeview-file">查看中标结果</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/zhaobiaojinduManage.do?operate=list" target="rightFrame"><div class="treeview-file">原料订货确认</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/shqdHeadManage.do?operate=list" target="rightFrame"><div class="treeview-file">送货清单维护</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/fapiaoManage.do?operate=list" target="rightFrame"><div class="treeview-file">发票信息维护</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/fukuanManage.do?operate=list" target="rightFrame"><div class="treeview-file">付款明细维护</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/zhaobiaojinduManage.do?operate=zhibaolist" target="rightFrame"><div class="treeview-file">质保金维护</div></a></li>
+			<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/zhaobiaojinduManage.do?operate=nofinishlist" target="rightFrame"><div class="treeview-file">未完成订单查询</div></a></li>
+				
+		</ul>
+	</li>
+	</c:if>
+		<c:if test="${sessionScope['Logon.User'].loginRole ==3}">	
+	<li style="list-style:none; margin:0px;">
+		<div class="treeview-folder">供应商管理</div>
+		<!-- 展开display:block; -->
+		<ul style="display:none">
+		
+	
+				<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/MedicineJbAction.do?operate=list" target="rightFrame"><div class="treeview-file">供应商录入招标品种</div></a></li>
+				<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/MedicineZbAction.do?operate=resultForSuppliersList" target="rightFrame"><div class="treeview-file">查看招标结果</div></a></li>
+				<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/MedicineZbAction.do?operate=toContract" target="rightFrame"><div class="treeview-file">下载合同范本</div></a></li>
+		
+				
+		</ul>
+		</li>
+		</c:if>
+	<c:if test="${sessionScope['Logon.User'].loginRole ==4}">
+		<li style="list-style:none; margin:0px;">
+		<div class="treeview-folder">质量部管理</div>
+		<!-- 展开display:block; -->
+		<ul style="display:none">
+					<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/supplier.do?operate=list" target="rightFrame"><div class="treeview-file">供应商信息管理</div></a></li>
+	<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/storageManage.do?operate=zllist" target="rightFrame"><div class="treeview-file">放行维护</div></a></li>
+		<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/supplier.do?operate=oodlist" target="rightFrame"><div class="treeview-file">查询即将过期供应商</div></a></li>
+
+				
+		</ul>
+		</li>
+		</c:if>
+			<c:if test="${sessionScope['Logon.User'].loginRole ==5}">
+		<li style="list-style:none; margin:0px;">
+		<div class="treeview-folder">物流部管理</div>
+		<!-- 展开display:block; -->
+		<ul style="display:none">
+		
+	<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/storageManage.do?operate=list" target="rightFrame"><div class="treeview-file">库存维护</div></a></li>
+				<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/storageManage.do?operate=listdaiyanxinxi" target="rightFrame"><div class="treeview-file">待验信息查询</div></a></li>
+				<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/storageManage.do?operate=listbuhege" target="rightFrame"><div class="treeview-file">不合格信息查询</div></a></li>
+				<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/storageManage.do?operate=shqd2storage" target="rightFrame"><div class="treeview-file">从送货清单导入库存</div></a></li>
+				
+		</ul>
+		</li>
+		</c:if>
+			<c:if test="${sessionScope['Logon.User'].loginRole ==6}">
+		<li style="list-style:none; margin:0px;">
+		<div class="treeview-folder">财务部管理</div>
+		<!-- 展开display:block; -->
+		<ul style="display:none">
+		
+				<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/zhaobiaojinduManage.do?operate=zhibaolist" target="rightFrame"><div class="treeview-file">质保金维护</div></a></li>
+		</ul>
+		</li>
+		</c:if>
+				<c:if test="${sessionScope['Logon.User'].loginRole ==7}">
+		<li style="list-style:none; margin:0px;">
+		<div class="treeview-folder">运营部管理</div>
+		<!-- 展开display:block; -->
+		<ul style="display:none">
+		
+		<li style="padding-left:15px;" onmouseover="this.className='but_over'" onmouseout="this.className='but_out'"><a href="<%=request.getContextPath()%>/supplier.do?operate=yylist" target="rightFrame"><div class="treeview-file">供应商信息管理</div></a></li>
+				
+		</ul>
+		</li>
+		</c:if>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+$(function() {
+	$('#demo3').lightTreeview({
+		collapse: true,
+		line: true,
+		nodeEvent: true,
+		unique: true,
+		style: 'black',
+		animate: 400
+	});
+
+});
+var treeid = "";
+function changeFolder(obj)
+{
+	if(obj )
+	{
+		if(obj.status == "1")
+		{
+			obj.status = "2";
+			obj.className = "treeview-folder2";
+			if(document.getElementById(treeid) && obj.id != treeid)
+			{
+				document.getElementById(treeid).status = "1";
+				$.lightTreeview.close('#'+ treeid);
+				document.getElementById(treeid).className = "treeview-folder2-close";
+			}
+			treeid = obj.id;
+		}
+		else if(obj.status == "2")
+		{
+			obj.status = "1";
+			obj.className = "treeview-folder2-close";
+		}
+	}
+}
+</script>

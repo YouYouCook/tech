@@ -1,0 +1,230 @@
+/*     */ package cn.krt.zbcg.system.web.action;
+/*     */ 
+/*     */ import cn.krt.zbcg.commons.bo.system.MedicineBO;
+import cn.krt.zbcg.commons.bo.system.MedicineCgBO;
+/*     */ import cn.krt.zbcg.commons.bo.system.MedicineJbBO;
+/*     */ import cn.krt.zbcg.system.services.IMedicineCgServices;
+/*     */ import cn.krt.zbcg.system.services.IMedicineJbServices;
+/*     */ import cn.krt.zbcg.system.web.form.MedicineCgForm;
+
+/*     */ import java.util.List;
+/*     */ import java.util.Map;
+
+/*     */ import javax.servlet.http.HttpServletRequest;
+/*     */ import javax.servlet.http.HttpServletResponse;
+
+/*     */ import org.apache.commons.lang.exception.ExceptionUtils;
+/*     */ import org.apache.commons.logging.Log;
+/*     */ import org.apache.struts.action.ActionForm;
+/*     */ import org.apache.struts.action.ActionForward;
+/*     */ import org.apache.struts.action.ActionMapping;
+/*     */ import org.ssi.common.Operate;
+/*     */ import org.ssi.common.PageInfo;
+/*     */ import org.ssi.struts.action.SSIDispatchAction;
+/*     */ 
+/*     */ public class MedicineCgAction extends SSIDispatchAction
+/*     */ {
+/*     */   private IMedicineCgServices cineCgServices;
+/*     */   private IMedicineJbServices cineJbServices;
+/*     */ 
+/*     */   private IMedicineCgServices getCineCgServices()
+/*     */   {
+/*  41 */     if (this.cineCgServices == null) {
+/*  42 */       this.cineCgServices = ((IMedicineCgServices)getBean("cineCgServices"));
+/*     */     }
+/*  44 */     return this.cineCgServices;
+/*     */   }
+/*     */ 
+/*     */   private IMedicineJbServices getCineJbServices() {
+/*  48 */     if (this.cineJbServices == null) {
+/*  49 */       this.cineJbServices = ((IMedicineJbServices)getBean("cineJbServices"));
+/*     */     }
+/*  51 */     return this.cineJbServices;
+/*     */   }
+
+
+					public void processImagePath(HttpServletRequest request,List cineCgList){
+						if(cineCgList!=null){
+							 String path = request.getContextPath();   
+							  String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/"; 
+							  String dir=basePath+"/uploadfiles/"; 
+							for(Object mbo:cineCgList){
+								MedicineCgBO bo = (MedicineCgBO) mbo;
+								String imagename = bo.getMedicineBO().getMedicineimagefilename();
+								if(imagename!=null && !imagename.equals("")){
+									 bo.getMedicineBO().setMedicineimagefilename(dir+imagename);
+								}else{
+									// bo.getMedicineBO().setMedicineimagefilename(dir+"test.jpg");
+									//默认图
+								}
+							}
+							
+						}
+						
+					}
+/*     */   public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/*  60 */     MedicineCgForm cineCgForm = (MedicineCgForm)form;
+/*  61 */     PageInfo pageInfo = new PageInfo();
+/*  62 */     Map map = Operate.describe(cineCgForm);
+/*  63 */     getCineCgServices().setRequest(request);
+				List cineCgList = getCineCgServices().findAll(pageInfo, map);
+				processImagePath(request,cineCgList);
+/*  65 */     request.setAttribute("cineCgList", cineCgList);
+/*  66 */     request.setAttribute("pageInfo", pageInfo);
+/*  67 */     request.setAttribute("beginDate", cineCgForm == null ? "" : cineCgForm.getBeginDate());
+/*  68 */     request.setAttribute("endDate", cineCgForm == null ? "" : cineCgForm.getEndDate());
+/*  69 */     request.setAttribute("name", cineCgForm == null ? "" : cineCgForm.getName());
+/*  70 */     return mapping.findForward("listCG");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward getTops(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/*  77 */     MedicineCgForm cineCgForm = (MedicineCgForm)form;
+/*  78 */     String beginDate = cineCgForm.getBeginDate();
+/*  79 */     String endDate = cineCgForm.getEndDate();
+/*  80 */     String medicineId = String.valueOf(cineCgForm.getMedicineId());
+/*  81 */     String name = cineCgForm.getName();
+/*  82 */     Map map = Operate.describe(cineCgForm);
+/*  83 */     map.put("beginDate", beginDate);
+/*  84 */     map.put("endDate", endDate);
+/*  85 */     map.put("medicineId", cineCgForm.getMedicineId());
+/*  86 */     if (((cineCgForm.getBeginDate() != null) || (cineCgForm.getEndDate() != null) || (cineCgForm.getName() != null)) && (
+/*  87 */       (!"".equals(beginDate)) || (!"".equals(endDate)) || (!"".equals(name))))
+/*     */     {
+/*  89 */       List cineJbList = getCineCgServices().getTops(map);
+/*     */ 
+/*  91 */       if ((cineJbList != null) && (cineJbList.size() > 0))
+/*     */       {
+/*  93 */         MedicineCgBO medicineCgBO = ((MedicineJbBO)cineJbList.get(0)).getMedicineCgBO();
+/*  94 */         request.setAttribute("medicineCgBO", medicineCgBO);
+/*     */       }
+/*  96 */       request.setAttribute("cineJbList", cineJbList);
+/*     */     }
+/*  98 */     request.setAttribute("beginDate", beginDate);
+/*  99 */     request.setAttribute("endDate", endDate);
+/* 100 */     request.setAttribute("name", name);
+/* 101 */     request.setAttribute("medicineId", medicineId);
+/* 102 */     return mapping.findForward("topList");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward addCG(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+/* 106 */     MedicineCgForm cineCgForm = (MedicineCgForm)form;
+/* 107 */     Map map = Operate.describe(cineCgForm);
+/* 108 */     map.put("beginDate", cineCgForm.getBeginDate());
+/* 109 */     map.put("endDate", cineCgForm.getEndDate());
+/* 110 */     map.put("remark", cineCgForm.getRemark());
+/* 111 */     getCineCgServices().addCG(map);
+/* 112 */     return list(mapping, null, request, response);
+/*     */   }
+/*     */ 
+/*     */   public ActionForward toAdd(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 122 */     if (log.isDebugEnabled()) log.debug("forward to add page.");
+/* 123 */     return mapping.findForward("toAdd");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward add(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 133 */     if (log.isDebugEnabled()) log.debug("get actionForm object.");
+/* 134 */     MedicineCgForm cineCgForm = (MedicineCgForm)form;
+/* 135 */     if (log.isDebugEnabled()) log.debug("get business object.");
+/* 136 */     MedicineCgBO cineCgBO = cineCgForm.getCineCgBO();
+/*     */     try {
+/* 138 */       if (log.isDebugEnabled()) log.debug("insert data.");
+/* 139 */       getCineCgServices().insert(cineCgBO);
+/*     */     } catch (Exception e) {
+/* 141 */       ExceptionUtils.getFullStackTrace(e);
+/*     */     }
+/* 143 */     return list(mapping, form, request, response);
+/*     */   }
+/*     */ 
+/*     */   public ActionForward toUpdate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 153 */     MedicineCgForm cineCgForm = (MedicineCgForm)form;
+/* 154 */     String id = cineCgForm.getSelectNos()[0];
+/* 155 */     MedicineCgBO cineCgBO = getCineCgServices().findById(Integer.valueOf(id));
+/* 156 */     cineCgForm.setCineCgBO(cineCgBO);
+/* 157 */     request.setAttribute("cineCgBO", cineCgBO);
+/* 158 */     return mapping.findForward("toUpdate");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 168 */     MedicineCgForm cineCgForm = (MedicineCgForm)form;
+/* 169 */     MedicineCgBO cineCgBO = cineCgForm.getCineCgBO();
+/*     */     try {
+/* 171 */       getCineCgServices().update(cineCgBO);
+/*     */     } catch (Exception e) {
+/* 173 */       ExceptionUtils.getFullStackTrace(e);
+/*     */     }
+/* 175 */     return list(mapping, form, request, response);
+/*     */   }
+/*     */ 
+/*     */   public ActionForward updateTops(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+/* 179 */     MedicineCgForm cineCgForm = (MedicineCgForm)form;
+/* 180 */     String[] ids = request.getParameterValues("ids");
+/* 181 */     getCineCgServices().updateTops(ids);
+/* 182 */     request.setAttribute("beginDate", cineCgForm.getBeginDate());
+/* 183 */     request.setAttribute("endDate", cineCgForm.getEndDate());
+/* 184 */     request.setAttribute("name", cineCgForm.getName());
+/* 185 */     return getTops(mapping, form, request, response);
+/*     */   }
+/*     */ 
+/*     */   public ActionForward toDelete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 195 */     if (log.isDebugEnabled()) log.debug("get actionForm object.");
+/* 196 */     MedicineCgForm cineCgForm = (MedicineCgForm)form;
+/* 197 */     String[] ids = cineCgForm.getSelectNos();
+/*     */     try {
+/* 199 */       if (log.isDebugEnabled()) log.debug("delete data or change data's status to delete.");
+/* 200 */       getCineCgServices().delete(ids);
+/*     */     } catch (Exception localException) {
+/*     */     }
+/* 203 */     return list(mapping, form, request, response);
+/*     */   }
+/*     */ 
+/*     */   public ActionForward toDetail(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 213 */     if (log.isDebugEnabled()) log.debug("get actionForm object.");
+/* 214 */     MedicineCgForm cineCgForm = (MedicineCgForm)form;
+/* 215 */     String id = cineCgForm.getSelectNos()[0];
+/* 216 */     if (log.isDebugEnabled()) log.debug("get data detail by id=" + id + ".");
+/* 217 */     MedicineCgBO cineCgBO = getCineCgServices().findById(Integer.valueOf(id));
+/* 218 */     if (log.isDebugEnabled()) log.debug("set business object.");
+/* 219 */     cineCgForm.setCineCgBO(cineCgBO);
+/* 220 */     return mapping.findForward("toDetail");
+/*     */   }
+/*     */ 
+/*     */   public ActionForward updateBx(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+/*     */     throws Exception
+/*     */   {
+/* 229 */     MedicineCgForm cineCgForm = (MedicineCgForm)form;
+/* 230 */     MedicineJbBO cineJbBO = new MedicineJbBO();
+/* 231 */     String jbId = request.getParameter("ids");
+/* 232 */     String hgState = request.getParameter(jbId + "hgState");
+/* 233 */     String view = request.getParameter(jbId + "view");
+/* 234 */     cineJbBO.setJbId(Integer.valueOf(Integer.parseInt(jbId)));
+/* 235 */     cineJbBO.setHgState(hgState);
+/* 236 */     cineJbBO.setView(view);
+/*     */     try {
+/* 238 */       getCineJbServices().update(cineJbBO);
+/*     */     } catch (Exception e) {
+/* 240 */       ExceptionUtils.getFullStackTrace(e);
+/*     */     }
+/* 242 */     return getTops(mapping, form, request, response);
+/*     */   }
+/*     */ }
+
+/* Location:           D:\李慧医药项目\tcmages\krt\WEB-INF\classes\
+ * Qualified Name:     cn.krt.zbcg.system.web.action.MedicineCgAction
+ * JD-Core Version:    0.6.2
+ */
