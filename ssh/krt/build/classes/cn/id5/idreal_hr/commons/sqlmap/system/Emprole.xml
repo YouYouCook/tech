@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="GBOSS_S_T_EMP_ROLE" >
+  <resultMap id="abatorgenerated_STEmpRoleResult" class="cn.id5.idreal_hr.commons.bo.system.EmpRoleBO" >
+    
+    <result column="EMP_ID" property="empId" jdbcType="long" />
+    <result column="ROLE_ID" property="roleId" jdbcType="long" />
+  </resultMap>
+  
+  
+  <insert id="insert" parameterClass="cn.id5.idreal_hr.commons.bo.system.EmpRoleBO" >
+	  insert into S_T_EMP_ROLE (EMP_ID, ROLE_ID)
+	  values (#empId#, #roleId#)
+	</insert>
+	<delete id="delete" parameterClass="cn.id5.idreal_hr.commons.bo.system.EmpRoleBO" >
+	  delete from S_T_EMP_ROLE where EMP_ID=#empId# and ROLE_ID=#roleId# 
+	</delete>
+	<select id="deleteRoleId" parameterClass="cn.id5.idreal_hr.commons.bo.system.EmpRoleBO" resultClass="cn.id5.idreal_hr.commons.bo.system.EmpRoleBO">
+	 select * from S_T_EMP_ROLE	where ROLE_ID=#roleId# 
+	</select>
+</sqlMap>
